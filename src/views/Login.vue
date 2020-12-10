@@ -1,0 +1,298 @@
+<template>
+  <div id="app">
+    <div class="center">
+      <div class="header"></div>
+      <div class="background">
+        <div class="image">
+          <form method="post" name="loginForm">
+            <!--class类选择器-->
+            <div class="loginTable">
+              <div style="width: 100%;">
+                <div>
+                  <h2>
+                    <!--html选择器-->
+                    用户登录
+                  </h2>
+                  <hr style="width: 100%; height: 1px; color:silver">
+                </div>
+              </div>
+              <div>
+                <label>
+                  <input class="loginText" v-model="formData.userName" type="text"
+                         onfocus="this.placeholder=''" onblur="this.placeholder='随意输入即可'"
+                         placeholder="随意输入即可">
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input class="loginText" v-model="formData.userPwd" type="password"
+                         onfocus="this.placeholder=''" onblur="this.placeholder='******'"
+                         placeholder="******">
+                </label>
+              </div>
+              <div class="align_left">
+                <div>
+                  <input id="rememberMe" v-model="formData.rememberMe" type="checkbox">
+                  <label id="loginCheck" for="rememberMe">两周内自动登录</label>
+                </div>
+              </div>
+              <div style="display: flex;flex-direction: row;">
+                <label>
+                  <input class="loginText" style="width: 120px;"
+                         v-model="formData.userCode"
+                         placeholder="请输入验证码">
+                </label>
+                <div class="codeContainer">
+                  <img class="codeImage" src="" alt="验证码失效" id="codeImage" ref="codeImage"
+                       @click="changeCode(this)">
+                </div>
+              </div>
+              <div class="buttons">
+                <input class="loginButton" id="loginSys" name="loginSys" type="button"
+                       @click="handleSubmit()" value="登    录">
+                <input class="loginButton" id="resetForm" name="resetForm" type="reset"
+                       value="重    置">
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <br>
+      <!--行内样式-->
+      <span style="font-family: 微软雅黑 Light, serif; font-size: 14px; font-weight: bold; color: gray;">
+                版权所有 © 浙大宁波理工学院数据分院
+            </span>
+    </div>
+  </div>
+</template>
+
+<script>
+import md5 from 'js-md5'
+import axios from 'axios'
+import request from '../utils/request'
+
+export default {
+  name: 'Home',
+  data () {
+    return {
+      clickType: true,
+      formData: {
+        userName: '',
+        userPwd: '',
+        rememberMe: false,
+        userCode: ''
+      }
+    }
+  },
+  methods: {
+    application_json () {
+      // 配置post的请求头
+      axios.defaults.headers.post['Content-Type'] = 'application/json'
+      axios.post('request-json.jsp', this.formData).then(res => {
+        console.log(res)
+      })
+    },
+
+    multipart_form_data () {
+      // 配置post的请求头
+      axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+      axios.post('request-json.jsp', this.formData).then(function (res) {
+        document.getElementById('multipart_form_data').innerText = JSON.stringify(res.data)
+      })
+    },
+
+    changeCode () {
+      request.get({url: 'api/user/code'}).then(res => {
+        this.$refs.codeImage.src = res
+        console.log(this.$refs.codeImage.src)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    handleSubmit () {
+      let formData = {
+        'userName': this.formData.userName,
+        'userPwd': md5(this.formData.userPwd)
+      }
+      console.log(formData)
+      this.$router.push({name: 'SortTrash'})
+      // const _this = this
+      // axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
+      // if (this.clickType) {
+      //     this.clickType = false
+      //     axios.post('', formData).then(res => {
+      //         console.log(res.data)
+      //         _this.clickType = true
+      //
+      //     }).catch(err => {
+      //         console.log(err)
+      //         _this.clickType = true
+      //     })
+      // }
+    }
+  }
+}
+</script>
+
+<style>
+h2 {
+  color: gray;
+  font-family: "微软雅黑 Light", serif;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.center {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  width: 100%;
+  height: 40px;
+}
+
+.background {
+  width: 100%;
+  background: #020202;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 1000px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: url("../img/background.jpg");
+  background-size: cover;
+}
+
+/*html选择器*/
+a:link {
+  color: #337ab7;
+  text-decoration: none;
+  font-family: "微软雅黑 Light", serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/*html选择器*/
+a:visited {
+  color: #337ab7;
+  text-decoration: none;
+  font-family: "微软雅黑 Light", serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/*html选择器*/
+a:hover {
+  color: #337ab7;
+  text-decoration: underline;
+  font-family: "微软雅黑 Light", serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/*html选择器*/
+a:active {
+  color: #337ab7;
+  text-decoration: underline;
+  font-family: "微软雅黑 Light", serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/*class类选择器*/
+.loginTable {
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.align_left {
+  align-self: flex-start;
+}
+
+/*class类选择器*/
+.loginTable td {
+  width: 100%;
+  height: 50px;
+  border: none;
+}
+
+/*class类选择器*/
+.loginText {
+  margin-top: 12px;
+  color: #000000;
+  width: 300px;
+  font-family: "微软雅黑 Light", serif;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 10px;
+  cursor: hand;
+}
+
+.buttons {
+  margin-top: 12px;
+  width: 330px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/*class类选择器*/
+.loginButton {
+  color: white;
+  width: 155px;
+  height: 35px;
+  font: bold 16px 微软雅黑 Light;
+  padding: 1px 20px 0 20px;
+  border: #337ab7 1px solid;
+  background: #337ab7;
+  cursor: pointer;
+}
+
+/*id选择器*/
+#rememberMe {
+  margin-top: 12px;
+  margin-left: 85px;
+}
+
+/*id选择器*/
+#loginCheck {
+  color: silver;
+  font: bold 14px 微软雅黑 Light;
+}
+
+::-webkit-input-placeholder {
+  font-family: "微软雅黑 Light", serif;
+  font-weight: bold;
+  font-size: 14px;
+  color: silver;
+}
+
+.codeContainer {
+  width: 160px;
+  height: 40px;
+  margin-left: 20px;
+  background: white;
+  margin-top: 12px;
+}
+
+.codeImage {
+  width: 100%;
+  height: 100%;
+}
+</style>
