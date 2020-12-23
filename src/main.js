@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import router from './router/index'
 import App from './App'
 import VueResource from 'vue-resource'
+import ElementUI from 'element-ui' // element-ui的全部组件
+import 'element-ui/lib/theme-chalk/index.css'// element-ui的css
 
 router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */
@@ -15,6 +17,7 @@ router.beforeEach((to, from, next) => {
 Vue.config.productionTip = false
 Vue.use(VueResource)
 Vue.use(VueRouter)
+Vue.use(ElementUI) // 使用elementUI
 
 new Vue({
   router: router,

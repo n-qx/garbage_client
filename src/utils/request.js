@@ -12,8 +12,9 @@ function requestPost (url, method, data, token) {
       timeout: 10000
     }).then((res) => {
       // 这边可以验证请求的token是否有效
-      if (res.headers.token_status === 'no') {
-        alert('获取用户信息失败，请重新登录')
+      if (res.headers.map.token_status[0] === 'no') {
+        alert('登录已过期，请重新登录')
+        window.location.href = '/'
       } else {
         resolve(res.data)
       }
@@ -25,12 +26,11 @@ function requestPost (url, method, data, token) {
 
 function requestGet (url, method, data, token) {
   return new Promise((resolve, reject) => {
-    Vue.http.get(url, {
+    Vue.http.get(url, data, {
       method: method,
       headers: {
         'Content-Type': 'application/json;',
-        'Access-Token': token,
-        'data': data
+        'Access-Token': token
       },
       responseType: 'blob',
       timeout: 10000
@@ -44,11 +44,11 @@ function requestGet (url, method, data, token) {
 }
 
 function get (obj) {
-  return requestGet(obj.url, 'GET', obj.data, null)
+  return requestGet(obj.url, 'GET', obj.data, localStorage.getItem('access-token'))
 }
 
 function post (obj) {
-  return requestPost(obj.url, 'POST', JSON.stringify(obj.data), null)
+  return requestPost(obj.url, 'POST', JSON.stringify(obj.data), localStorage.getItem('access-token'))
 }
 
 function postNoToken (obj) {
@@ -57,7 +57,7 @@ function postNoToken (obj) {
 
 // 如果传TableReqDTO,数据不要转为JSON.STRING
 function postNoJSON (obj) {
-  return requestPost(obj.url, 'POST', obj.data, null)
+  return requestPost(obj.url, 'POST', obj.data, localStorage.getItem('access-token'))
 }
 
 export default {

@@ -1,7 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '../views/Login'
+import Register from '../views/Register'
+import UserInfo from '../views/UserInfo'
 import SortTrash from '../views/SortTrash'
+import GarbageManage from '../views/GarbageManage'
+import Analysis from '../views/Analysis'
+import PageView from '../Layout/PageView'
+import MenuLayout from '../Layout/MenuLayout'
 
 Vue.use(Router)
 
@@ -19,25 +25,71 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/3180421011'
-    },
-    {
-      path: '/3180421011',
-      name: 'login',
-      component: Login,
-      meta: {
-        title: '登录',
-        keepAlive: false
-      }
-    },
-    {
-      path: '/3180421011/SortTrash',
-      name: 'SortTrash',
-      component: SortTrash,
-      meta: {
-        title: '垃圾分类小游戏',
-        keepAlive: true
-      }
+      redirect: 'login',
+      component: PageView,
+      children: [
+        {
+          path: '/login',
+          name: 'Login',
+          component: Login,
+          meta: {
+            title: '登录',
+            keepAlive: false
+          }
+        },
+        {
+          path: 'register',
+          name: 'Register',
+          component: Register,
+          meta: {
+            title: '注册',
+            keepAlive: false
+          }
+        },
+        {
+          path: '/menu',
+          redirect: 'userInfo',
+          component: MenuLayout,
+          children: [
+            {
+              path: 'userInfo',
+              name: 'UserInfo',
+              component: UserInfo,
+              meta: {
+                title: '垃圾分类小游戏',
+                keepAlive: true
+              }
+            },
+            {
+              path: 'sortTrash',
+              name: 'SortTrash',
+              component: SortTrash,
+              meta: {
+                title: '垃圾分类小游戏',
+                keepAlive: true
+              }
+            },
+            {
+              path: 'garbageManage',
+              name: 'GarbageManage',
+              component: GarbageManage,
+              meta: {
+                title: '垃圾分类小游戏',
+                keepAlive: true
+              }
+            },
+            {
+              path: 'analysis',
+              name: 'Analysis',
+              component: Analysis,
+              meta: {
+                title: '垃圾分类小游戏',
+                keepAlive: true
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 })

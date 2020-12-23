@@ -55,18 +55,18 @@
             <span>错误题数：{{ gameInfo.wrong }}</span>
           </div>
         </div>
-        <div class="table_row">
-          <div class="return_button" @click="clearData()" style="background: red;margin-right: 16px">
-            <div class="return_button_text">
-              清空数据
-            </div>
-          </div>
-          <div class="return_button" @click="goBack()">
-            <div class="return_button_text">
-              返回
-            </div>
-          </div>
-        </div>
+        <!--            <div class="table_row">-->
+        <!--              <div class="return_button" @click="clearData()" style="background: red;margin-right: 16px">-->
+        <!--                <div class="return_button_text">-->
+        <!--                  清空数据-->
+        <!--                </div>-->
+        <!--              </div>-->
+        <!--              <div class="return_button" @click="goBack()">-->
+        <!--                <div class="return_button_text">-->
+        <!--                  返回-->
+        <!--                </div>-->
+        <!--              </div>-->
+        <!--            </div>-->
       </div>
     </div>
   </div>
@@ -74,10 +74,12 @@
 
 <script>
 import request from '../utils/request'
+
 export default {
   name: 'SortTrash',
   data () {
     return {
+      active: '2',
       // 循环状态：0停止，1循环中
       controlState: 0,
       gameInfo: {
@@ -120,12 +122,14 @@ export default {
     this.fetchData()
   },
   methods: {
+    goto (val) {
+      this.$router.push({name: val})
+    },
     fetchData () {
       const _this = this
       request.post({url: '/api/garbage/listAll'}).then(res => {
         if (res.message !== 'error') {
           _this.list = res.result
-          console.log(_this.list)
         } else {
           alert(res.result)
         }
@@ -235,6 +239,13 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.menu {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
 }
 
 .table {

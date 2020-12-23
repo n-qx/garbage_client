@@ -12,6 +12,11 @@
                   <h2>
                     <!--html选择器-->
                     用户登录
+                    <a
+                       @click="$router.push({name: 'Register'})"
+                       target="_self">
+                      用户注册
+                    </a>
                   </h2>
                   <hr style="width: 100%; height: 1px; color:silver">
                 </div>
@@ -43,13 +48,17 @@
                          placeholder="请输入验证码">
                 </label>
                 <div class="codeContainer">
-                  <img class="codeImage" src="" alt="验证码失效" id="codeImage" ref="codeImage"
+                  <img class="codeImage" :src="imgInfo.src" alt="" id="codeImage" ref="codeImage"
                        @click="changeCode(this)">
                 </div>
               </div>
               <div class="buttons">
-                <input class="loginButton" id="loginSys" name="loginSys" type="button"
-                       @click="handleSubmit()" value="登    录">
+                <input class="loginButton"
+                       id="loginSys"
+                       name="loginSys"
+                       type="button"
+                       :disabled="!clickType"
+                       @click="handleSubmit" value="登    录">
                 <input class="loginButton" id="resetForm" name="resetForm" type="reset"
                        value="重    置">
               </div>
@@ -67,12 +76,11 @@
 </template>
 
 <script>
-import md5 from 'js-md5'
-import axios from 'axios'
+import md5 from 'md5'
 import request from '../utils/request'
 
 export default {
-  name: 'Home',
+  name: 'Login',
   data () {
     return {
       clickType: true,
@@ -81,55 +89,72 @@ export default {
         userPwd: '',
         rememberMe: false,
         userCode: ''
+      },
+      imgInfo: {
+        src: '',
+        imgCodeKey: ''
       }
     }
   },
+  created () {
+    let token = localStorage.getItem('access-token')
+    console.log(token)
+    if (token !== null) {
+      this.$router.replace({name: 'UserInfo'})
+    }
+    this.changeCode()
+  },
   methods: {
-    application_json () {
-      // 配置post的请求头
-      axios.defaults.headers.post['Content-Type'] = 'application/json'
-      axios.post('request-json.jsp', this.formData).then(res => {
-        console.log(res)
-      })
-    },
-
-    multipart_form_data () {
-      // 配置post的请求头
-      axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
-      axios.post('request-json.jsp', this.formData).then(function (res) {
-        document.getElementById('multipart_form_data').innerText = JSON.stringify(res.data)
-      })
-    },
-
     changeCode () {
-      request.get({url: 'api/user/code'}).then(res => {
-        this.$refs.codeImage.src = res
-        console.log(this.$refs.codeImage.src)
+      const that = this
+      request.get({url: 'api/code/getImgCode'}).then(res => {
+        that.imgInfo.src = res.data
+        that.imgInfo.imgCodeKey = res.imgCodeKey
       }).catch(err => {
         console.log(err)
       })
     },
 
     handleSubmit () {
-      let formData = {
-        'userName': this.formData.userName,
-        'userPwd': md5(this.formData.userPwd)
+      if (!this.formData.userCode || this.formData.userCode.length === 0) {
+        alert('验证码为空')
+        return
       }
-      console.log(formData)
-      this.$router.push({name: 'SortTrash'})
-      // const _this = this
-      // axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
-      // if (this.clickType) {
-      //     this.clickType = false
-      //     axios.post('', formData).then(res => {
-      //         console.log(res.data)
-      //         _this.clickType = true
-      //
-      //     }).catch(err => {
-      //         console.log(err)
-      //         _this.clickType = true
-      //     })
-      // }
+      let formData = {
+        loginName: this.formData.userName,
+        loginPwd: md5(this.formData.userPwd),
+        rememberMe: this.formData.rememberMe
+      }
+      let imgData = {
+        imgCodeKey: this.imgInfo.imgCodeKey,
+        imgCode: this.formData.userCode
+      }
+      const that = this
+      this.clickType = false
+      request.post({url: '/api/code/checkImgCode', data: imgData}).then(res => {
+        if (res.message === 'yes') {
+          request.post({url: '/api/user/login', data: formData}).then(res => {
+            that.clickType = true
+            if (res.status === 200) {
+              localStorage.setItem('access-token', res.token)
+              alert('登录成功')
+              that.$router.push({name: 'UserInfo'})
+            } else {
+              alert(res.result)
+            }
+          }).catch(err => {
+            that.clickType = true
+            console.log(err)
+          })
+        } else {
+          that.clickType = true
+          alert(res.result)
+          that.changeCode()
+        }
+      }).catch(err => {
+        that.clickType = true
+        console.log(err)
+      })
     }
   }
 }
@@ -174,6 +199,11 @@ h2 {
   justify-content: flex-end;
   background: url("../img/background.jpg");
   background-size: cover;
+}
+
+a {
+  font-size: 13px;
+  cursor: pointer;
 }
 
 /*html选择器*/
