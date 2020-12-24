@@ -21,18 +21,24 @@
                   <hr style="width: 100%; height: 1px; color:silver">
                 </div>
               </div>
-              <div>
+              <div class="tableRow">
+                <div class="label">
+                  <span class="registerMessage">用户名：</span>
+                </div>
                 <label>
                   <input class="loginText" v-model="formData.userName" type="text"
-                         onfocus="this.placeholder=''" onblur="this.placeholder='随意输入即可'"
-                         placeholder="随意输入即可">
+                         onfocus="this.placeholder=''" onblur="this.placeholder='请输入用户名'"
+                         placeholder="请输入用户名">
                 </label>
               </div>
-              <div>
+              <div class="tableRow">
+                <div class="label">
+                  <span class="registerMessage">密码：</span>
+                </div>
                 <label>
                   <input class="loginText" v-model="formData.userPwd" type="password"
-                         onfocus="this.placeholder=''" onblur="this.placeholder='******'"
-                         placeholder="******">
+                         onfocus="this.placeholder=''" onblur="this.placeholder='请输入密码'"
+                         placeholder="请输入密码">
                 </label>
               </div>
               <div class="align_left">
@@ -41,7 +47,10 @@
                   <label id="loginCheck" for="rememberMe">两周内自动登录</label>
                 </div>
               </div>
-              <div style="display: flex;flex-direction: row;">
+              <div class="tableRow">
+                <div class="label">
+                  <span class="registerMessage">验证码：</span>
+                </div>
                 <label>
                   <input class="loginText" style="width: 120px;"
                          v-model="formData.userCode"
@@ -191,6 +200,11 @@ h2 {
   justify-content: center;
 }
 
+.label {
+  margin-left: 12px;
+  width: 80px;
+}
+
 .image {
   width: 1000px;
   height: 500px;
@@ -199,6 +213,18 @@ h2 {
   justify-content: flex-end;
   background: url("../img/background.jpg");
   background-size: cover;
+}
+
+.tableRow {
+  height: 55px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.registerMessage {
+  color: gray;
+  font: bold 14px 微软雅黑 Light;
 }
 
 a {
@@ -275,6 +301,7 @@ a:active {
 }
 
 .buttons {
+  margin-left: 92px;
   margin-top: 12px;
   width: 330px;
   display: flex;
@@ -297,7 +324,7 @@ a:active {
 /*id选择器*/
 #rememberMe {
   margin-top: 12px;
-  margin-left: 85px;
+  margin-left: 135px;
 }
 
 /*id选择器*/
@@ -314,10 +341,10 @@ a:active {
 }
 
 .codeContainer {
+  background: #000000;
   width: 160px;
   height: 40px;
   margin-left: 20px;
-  background: white;
   margin-top: 12px;
 }
 
