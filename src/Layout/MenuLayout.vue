@@ -1,27 +1,34 @@
 <template>
   <el-container>
     <el-header>
-      <div class="menu">
-        <el-menu style="margin-left: 16px;width: 100%; display: flex;flex-direction: row"
-                 @select="handleSelect"
-                 :default-active="active"
-                 class="el-menu-demo" mode="horizontal">
-          <div @click=";">
+      <div class="header">
+        <div style="margin-top: 16px;">
+          <div class="theme">
             <el-page-header
-              style="margin-right: 32px;margin-top: 16px;border: none;"
               @back="goBack" content="垃圾分类小游戏管理系统">
             </el-page-header>
           </div>
-          <el-menu-item index="UserInfo">用户信息</el-menu-item>
-          <el-menu-item index="SortTrash">开始游戏</el-menu-item>
-          <el-menu-item index="GarbageManage">题库管理</el-menu-item>
-          <el-menu-item index="Analysis">数据统计</el-menu-item>
-        </el-menu>
-        <div class="line"></div>
+        </div>
+        <div class="menu">
+          <el-menu style="border: none"
+                   @select="handleSelect"
+                   :default-active="$route.path.substr($route.path.lastIndexOf('/') + 1)"
+                   class="el-menu-demo"
+                   mode="horizontal"
+                   router>
+            <el-menu-item index="userInfo">用户信息</el-menu-item>
+            <el-menu-item index="sortTrash">开始游戏</el-menu-item>
+            <el-menu-item index="garbageManage">题库管理</el-menu-item>
+            <el-menu-item index="analysis">数据统计</el-menu-item>
+          </el-menu>
+        </div>
+        <div class="logout" @click="logout">
+          <span style="font-family: 'Hiragino Sans GB', serif;">退出登录</span>
+        </div>
       </div>
     </el-header>
     <el-main>
-      <router-view />
+      <router-view/>
     </el-main>
   </el-container>
 </template>
@@ -34,35 +41,69 @@ export default {
       active: ''
     }
   },
-  created () {
-    let path = this.$route.path
-    this.active = path.substr(path.lastIndexOf('/') + 1)
-    this.active = this.active.substr(0, 1).toUpperCase() + this.active.substr(1)
-  },
   methods: {
-    handleSelect (key, keyPath) {
-      if (key !== this.active) {
-        const that = this
-        this.$router.push({name: key}).then(
-          that.active = key
-        )
-      }
+    changeActive () {
+      let path = this.$route.path
+      this.active = path.substr(path.lastIndexOf('/') + 1)
+      this.active = this.active.substr(0, 1).toUpperCase() + this.active.substr(1)
     },
-    goto (val) {
-      this.$router.push({name: val})
+    handleSelect (key, keyPath) {
+      // console.log(key, keyPath)
+      // if (key !== this.active) {
+      //   const that = this
+      //   this.$router.push({name: key}).then(
+      //     that.active = key
+      //   )
+      // }
     },
     goBack () {
       this.$router.back()
+      this.changeActive()
+    },
+    logout () {
+      this.$confirm('确定要退出登录吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        localStorage.removeItem('access-token')
+        window.location.href = '/'
+      }).catch(() => {
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-.menu {
+.header {
   width: 100%;
+  height: 60px;
   display: flex;
   flex-direction: row;
   align-content: center;
+  border-bottom: 1px solid lightgrey;
+}
+
+.theme {
+  width: 310px;
+  display: flex;
+}
+
+.menu {
+  width: 100%;
+  margin-left: 32px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
+
+.logout {
+  width: 136px;
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  line-height: 60px;
+  cursor: pointer;
 }
 </style>

@@ -98,8 +98,7 @@ export default {
   },
   created () {
     let token = localStorage.getItem('access-token')
-    console.log(token)
-    if (token !== null) {
+    if (token && token.length > 0) {
       this.$router.replace({name: 'UserInfo'})
     }
     this.changeCode()
@@ -147,6 +146,7 @@ export default {
             console.log(err)
           })
         } else {
+          that.formData.userCode = ''
           that.clickType = true
           alert(res.result)
           that.changeCode()

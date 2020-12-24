@@ -13,6 +13,7 @@ function requestPost (url, method, data, token) {
     }).then((res) => {
       // 这边可以验证请求的token是否有效
       if (res.headers.map.token_status[0] === 'no') {
+        localStorage.removeItem('access-token')
         alert('登录已过期，请重新登录')
         window.location.href = '/'
       } else {

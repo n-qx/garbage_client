@@ -35,10 +35,4 @@ export default {
   justify-content: center;
 }
 
-.menu {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-content: center;
-}
 </style>
