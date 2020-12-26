@@ -19,13 +19,6 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="处理方式" prop="garbageInfo">
-            <el-input type="text" v-model="garbage.garbageInfo"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
           <el-form-item label="垃圾名称" prop="garbageName">
             <el-input type="text" v-model="garbage.garbageName"></el-input>
           </el-form-item>
@@ -33,8 +26,8 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="垃圾类别" prop="garbageType">
-            <el-select v-model="garbage.garbageType" placeholder="请选择">
+          <el-form-item label="垃圾类别" prop="sortId">
+            <el-select v-model="garbage.sortId" placeholder="请选择">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -72,21 +65,19 @@ export default {
         garbageFlag: [
           { required: true, message: '请输入垃圾种类', trigger: 'blur' }
         ],
-        garbageInfo: [
-          { required: true, message: '请输入处理方式', trigger: 'blur' }
-        ],
         garbageName: [
           { required: true, message: '请输入垃圾名称', trigger: 'blur' }
         ],
-        garbageType: [
-          { required: true, message: '请输入垃圾类别', trigger: 'blur' }
+        sortId: [
+          { required: false, message: '请输入垃圾类别', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
     show (record) {
-      this.garbage = record
+      let obj = JSON.stringify(record)
+      this.garbage = JSON.parse(obj)
       this.visible = true
     },
     handleSubmit () {

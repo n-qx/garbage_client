@@ -28,11 +28,6 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="处理方式">
-              <el-input type="text" v-model="queryParam.garbageInfo"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
             <el-form-item>
               <el-button type="primary" @click="fetchData">查询</el-button>
               <el-button @click="queryParam={}">重置</el-button>
@@ -65,24 +60,24 @@
             width="55">
           </el-table-column>
           <el-table-column
-            prop="garbageFlag"
-            label="垃圾种类"
-            width="120">
-          </el-table-column>
-          <el-table-column
-            prop="garbageInfo"
-            label="处理方式"
-            width="120">
-          </el-table-column>
-          <el-table-column
             prop="garbageName"
             label="垃圾名称"
             width="150">
           </el-table-column>
           <el-table-column
-            prop="garbageType"
+            prop="sortId"
             label="垃圾类别"
-            width="100">
+            width="120">
+            <template slot-scope="scope">
+              <el-tag
+                :type="sortType[scope.row.sortId].style"
+                disable-transitions>{{ sortType[scope.row.sortId].name }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="garbageFlag"
+            label="垃圾种类"
+            width="120">
           </el-table-column>
           <el-table-column
             prop="gmtCreate"
@@ -134,21 +129,42 @@ export default {
   components: {EditGarbage, AddGarbage},
   data () {
     return {
+      sortType: [
+        {
+          style: ''
+        },
+        {
+          style: 'primary',
+          name: '可回收垃圾'
+        },
+        {
+          style: 'danger',
+          name: '有害垃圾'
+        },
+        {
+          style: 'success',
+          name: '厨余垃圾'
+        },
+        {
+          style: 'info',
+          name: '其他垃圾'
+        }
+      ],
       options: [
         {
-          value: '可回收垃圾',
+          value: 1,
           label: '可回收垃圾'
         },
         {
-          value: '有害垃圾',
+          value: 2,
           label: '有害垃圾'
         },
         {
-          value: '厨余垃圾',
+          value: 3,
           label: '厨余垃圾'
         },
         {
-          value: '其他垃圾',
+          value: 4,
           label: '其他垃圾'
         }
       ],
@@ -163,6 +179,8 @@ export default {
   },
   created () {
     this.fetchData()
+  },
+  filters: {
   },
   methods: {
     fetchData () {
@@ -208,7 +226,7 @@ export default {
     handleDelete (index, row) {
       // console.log(index, row)
       const that = this
-      request.postNoJSON({url: '/api/garbage/remove', data: row}).then(res => {
+      request.postNoJSON({url: '/api/garbage/remove', data: row.garbageId.toString()}).then(res => {
         if (res.result === 'error') {
           that.$message.error(res.result)
         } else {
