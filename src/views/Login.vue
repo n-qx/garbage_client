@@ -341,7 +341,7 @@ a:active {
 }
 
 .codeContainer {
-  background: #000000;
+  background: #FFFFFF;
   width: 160px;
   height: 40px;
   margin-left: 20px;
