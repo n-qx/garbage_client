@@ -17,18 +17,12 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="垃圾种类">
-              <el-input
-                type="text"
-                v-model="queryParam.garbageFlag"
-                @keyup.enter.native="fetchData"></el-input>
+              <el-input type="text" v-model="queryParam.garbageFlag"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="垃圾名称">
-              <el-input
-                type="text"
-                v-model="queryParam.garbageName"
-                @keyup.enter.native="fetchData"></el-input>
+              <el-input type="text" v-model="queryParam.garbageName"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -57,6 +51,10 @@
           style="width: 100%"
           @selection-change="handleSelectionChange">
           <el-table-column
+            type="selection"
+            width="55">
+          </el-table-column>
+          <el-table-column
             prop="garbageId"
             label="序号"
             width="55">
@@ -72,8 +70,8 @@
             width="120">
             <template slot-scope="scope">
               <el-tag
-                :type="styleMap[scope.row.sortId].style"
-                disable-transitions>{{ styleMap[scope.row.sortId].name }}</el-tag>
+                :type="sortType[scope.row.sortId].style"
+                disable-transitions>{{ sortType[scope.row.sortId].name }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -87,7 +85,7 @@
             width="120">
           </el-table-column>
           <el-table-column label="操作"
-            width="150">
+                           width="150">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -127,11 +125,11 @@ import AddGarbage from './module/AddGarbage'
 import EditGarbage from './module/EditGarbage'
 
 export default {
-  name: 'GarbageManage',
+  name: 'Exam',
   components: {EditGarbage, AddGarbage},
   data () {
     return {
-      styleMap: [
+      sortType: [
         {
           style: ''
         },

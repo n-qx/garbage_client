@@ -16,14 +16,23 @@
                    class="el-menu-demo"
                    mode="horizontal"
                    router>
-            <el-menu-item index="userInfo">用户信息</el-menu-item>
-            <el-menu-item index="sortTrash">开始游戏</el-menu-item>
-            <el-menu-item index="garbageManage">题库管理</el-menu-item>
-            <el-menu-item index="analysis">数据统计</el-menu-item>
+            <el-menu-item
+              v-for="menu in menuList"
+              v-bind:key="menu.id"
+              :index="menu.index">{{ menu.name }}</el-menu-item>
           </el-menu>
         </div>
-        <div class="logout" @click="logout">
-          <span style="font-family: 'Hiragino Sans GB', serif;">退出登录</span>
+        <div class="menu_right">
+          <el-tag
+            type="info"
+            size="medium"
+            style="font-size: 16px"
+            @click="$router.push({name: 'SortTrash'})">开始练习</el-tag>
+          <el-tag
+            type="danger"
+            size="medium"
+            style="margin-left: 16px; font-size: 16px"
+            @click="logout">退出登录</el-tag>
         </div>
       </div>
     </el-header>
@@ -38,7 +47,22 @@ export default {
   name: 'MenuLayout',
   data () {
     return {
+      menuList: [],
       active: ''
+    }
+  },
+  created () {
+    const list = JSON.parse(localStorage.getItem('roles'))
+    this.menuList = []
+    for (let item of list) {
+      if (item.menuCode.length > 4 && item.menuCode.indexOf('menu') !== -1) {
+        let menu = {
+          id: item.menuId,
+          index: item.menuCode.substr(5),
+          name: item.menuName
+        }
+        this.menuList.push(menu)
+      }
     }
   },
   methods: {
@@ -98,12 +122,12 @@ export default {
   align-content: center;
 }
 
-.logout {
-  width: 136px;
+.menu_right {
+  margin-top: 16px;
   display: flex;
   justify-content: center;
   margin-left: auto;
-  line-height: 60px;
   cursor: pointer;
+  font-family: 'Hiragino Sans GB', serif;
 }
 </style>

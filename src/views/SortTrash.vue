@@ -55,18 +55,18 @@
             <span>错误题数：{{ gameInfo.wrong }}</span>
           </div>
         </div>
-        <!--            <div class="table_row">-->
-        <!--              <div class="return_button" @click="clearData()" style="background: red;margin-right: 16px">-->
-        <!--                <div class="return_button_text">-->
-        <!--                  清空数据-->
-        <!--                </div>-->
-        <!--              </div>-->
-        <!--              <div class="return_button" @click="goBack()">-->
-        <!--                <div class="return_button_text">-->
-        <!--                  返回-->
-        <!--                </div>-->
-        <!--              </div>-->
-        <!--            </div>-->
+        <div class="table_row">
+          <div class="return_button" @click="clearData()" style="background: red;margin-right: 16px">
+            <div class="return_button_text">
+              清空数据
+            </div>
+          </div>
+          <div class="return_button" @click="goBack()">
+            <div class="return_button_text">
+              返回
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -115,28 +115,28 @@ export default {
           garbageType: '有害垃圾'
         }
       ],
-      list: []
+      sortMap: [3, 1, 4, 2]
+      // list: []
     }
   },
   created () {
-    this.fetchData()
   },
   methods: {
     goto (val) {
       this.$router.push({name: val})
     },
-    fetchData () {
-      const _this = this
-      request.post({url: '/api/garbage/listAll'}).then(res => {
-        if (res.message !== 'error') {
-          _this.list = res.result
-        } else {
-          alert(res.result)
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-    },
+    // fetchData () {
+    //   const _this = this
+    //   request.post({url: '/api/garbage/listAll'}).then(res => {
+    //     if (res.message !== 'error') {
+    //       _this.list = res.result
+    //     } else {
+    //       this.$message.error(res.result)
+    //     }
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    // },
     // 控制函数，点击开始传入参数1，点击停止传入参数0，递归传入参数2
     control (value) {
       if (value > 0) {
@@ -173,14 +173,17 @@ export default {
     // 延时函数，递归调用控制函数，传入参数2
     delayRandom (time) {
       const _this = this
-      this.garbage = this.list[this.getRandom(0, this.list.length - 1)]
+      request.post({url: '/api/garbage/queryOne'}).then(res => {
+        this.garbage = res
+      })
+      // this.garbage = this.list[this.getRandom(0, this.list.length - 1)]
       setTimeout(() => {
         _this.control(2)
       }, time)
     },
-    getRandom (begin, end) {
-      return Math.round(Math.random() * (end - begin) + begin)
-    },
+    // getRandom (begin, end) {
+    //   return Math.round(Math.random() * (end - begin) + begin)
+    // },
     onMouseOver (i) {
       if (this.gameInfo.answerState === 0) {
         this.bins[i].showHand = true
@@ -193,17 +196,30 @@ export default {
     },
     choseGarbage (i) {
       if (this.controlState === 1) {
-        alert('请点击停止')
+        this.$message.error('请点击停止')
       } else if (this.garbage.garbageName.length === 0 || this.gameInfo.answerState > 0) {
-        alert('请点击开始')
+        this.$message.error('请点击开始')
       } else {
-        if (this.garbage.garbageType === this.bins[i].garbageType) {
-          this.gameInfo.right++
-          this.gameInfo.answerState = 1
-        } else {
-          this.gameInfo.wrong++
-          this.gameInfo.answerState = 2
-        }
+        this.garbage.sortId = this.sortMap[i]
+        const that = this
+        request.postNoJSON({url: '/api/garbage/checkOne', data: this.garbage}).then(res => {
+          if (res.message === 'yes') {
+            that.gameInfo.right++
+            that.gameInfo.answerState = 1
+          } else {
+            that.gameInfo.wrong++
+            that.gameInfo.answerState = 2
+            that.garbage.garbageType = res.result.sortName
+            that.garbage.garbageInfo = res.result.sortInfo
+          }
+        })
+        // if (this.garbage.garbageType === this.bins[i].garbageType) {
+        //   this.gameInfo.right++
+        //   this.gameInfo.answerState = 1
+        // } else {
+        //   this.gameInfo.wrong++
+        //   this.gameInfo.answerState = 2
+        // }
       }
     },
     clearData () {

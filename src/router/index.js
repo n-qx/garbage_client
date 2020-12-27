@@ -8,6 +8,8 @@ import GarbageManage from '../views/GarbageManage'
 import Analysis from '../views/Analysis'
 import PageView from '../Layout/PageView'
 import MenuLayout from '../Layout/MenuLayout'
+import UserManage from '../views/UserManage'
+import Exam from '../views/Exam'
 
 Vue.use(Router)
 
@@ -38,7 +40,7 @@ export default new Router({
           }
         },
         {
-          path: 'register',
+          path: '/register',
           name: 'Register',
           component: Register,
           meta: {
@@ -47,26 +49,37 @@ export default new Router({
           }
         },
         {
+          path: '/sortTrash',
+          name: 'SortTrash',
+          component: SortTrash,
+          meta: {
+            title: '垃圾分类小游戏',
+            keepAlive: true
+          }
+        },
+        {
           path: '/menu',
+          name: 'Menu',
           redirect: 'userInfo',
           component: MenuLayout,
+          meta: { permission: ['menu'] },
           children: [
             {
               path: 'userInfo',
               name: 'UserInfo',
               component: UserInfo,
               meta: {
-                title: '垃圾分类小游戏',
-                keepAlive: true
+                keepAlive: true,
+                permission: ['menu-userInfo']
               }
             },
             {
-              path: 'sortTrash',
-              name: 'SortTrash',
-              component: SortTrash,
+              path: 'userManage',
+              name: 'UserManage',
+              component: UserManage,
               meta: {
-                title: '垃圾分类小游戏',
-                keepAlive: true
+                keepAlive: true,
+                permission: ['menu-userManage']
               }
             },
             {
@@ -74,8 +87,8 @@ export default new Router({
               name: 'GarbageManage',
               component: GarbageManage,
               meta: {
-                title: '垃圾分类小游戏',
-                keepAlive: true
+                keepAlive: true,
+                permission: ['menu-userManage']
               }
             },
             {
@@ -83,8 +96,17 @@ export default new Router({
               name: 'Analysis',
               component: Analysis,
               meta: {
-                title: '垃圾分类小游戏',
-                keepAlive: true
+                keepAlive: true,
+                permission: ['menu-analysis']
+              }
+            },
+            {
+              path: 'exam',
+              name: 'Exam',
+              component: Exam,
+              meta: {
+                keepAlive: true,
+                permission: ['menu-exam']
               }
             }
           ]

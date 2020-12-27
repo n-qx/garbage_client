@@ -8,12 +8,17 @@
             <!--class类选择器-->
             <div class="registerTable">
               <div style="width: 100%;">
-                <div>
+                <div style="width: 100%; display: flex;flex-direction: row">
                   <h2>
                     用户注册 <a @click="$router.push({name: 'Login'})" target="_self">用户登录</a>
                   </h2>
-                  <hr style="width: 100%;height: 1px;color: silver">
+                  <h2
+                    style="margin-left: auto; cursor: pointer"
+                    @click="$router.push({name: 'SortTrash'})">
+                    垃圾分类练习
+                  </h2>
                 </div>
+                <hr style="width: 100%;height: 1px;color: silver">
               </div>
               <div class="tableRow">
                 <div class="label">
@@ -129,24 +134,24 @@ export default {
         phone.length > 0 && password.length > 0 && checkPwd.length > 0 && userName.length > 0 &&
         idNumber.length > 0
       if (!flag) {
-        alert('信息填写不完整！')
+        this.$message.error('信息填写不完整！')
         return false
       }
       if (!this.phoneRe.test(phone)) {
-        alert('手机号格式不正确！')
+        this.$message.error('手机号格式不正确！')
         return false
       }
       if (password === checkPwd) {
         if (!this.pwdRe.test(checkPwd)) {
-          alert('登录密码格式不正确！')
+          this.$message.error('登录密码格式不正确！')
           return false
         }
       } else {
-        alert('确认密码必须和输入的密码相同！')
+        this.$message.error('确认密码必须和输入的密码相同！')
         return false
       }
       if (!this.cardRe.test(idNumber)) {
-        alert('身份证号格式不正确！')
+        this.$message.error('身份证号格式不正确！')
         return false
       }
       return true
@@ -169,10 +174,10 @@ export default {
           request.postNoJSON({url: '/api/user/register', data: form}).then(res => {
             that.clickType = true
             if (res.message !== 'error') {
-              alert('注册成功，欢迎登录')
+              this.$message.success('注册成功，欢迎登录')
               that.$router.push({name: 'Login'})
             } else {
-              alert(res.result)
+              this.$message.error(res.result)
             }
           }).catch(err => {
             that.clickType = true
@@ -180,7 +185,7 @@ export default {
           })
         } else {
           that.clickType = true
-          alert(res.result)
+          this.$message.error(res.result)
         }
       }).catch(err => {
         that.clickType = true

@@ -8,7 +8,7 @@
             <!--class类选择器-->
             <div class="loginTable">
               <div style="width: 100%;">
-                <div>
+                <div style="width: 100%; display: flex;flex-direction: row">
                   <h2>
                     <!--html选择器-->
                     用户登录
@@ -18,8 +18,13 @@
                       用户注册
                     </a>
                   </h2>
-                  <hr style="width: 100%; height: 1px; color:silver">
+                  <h2
+                    style="margin-left: auto; cursor: pointer"
+                    @click="$router.push({name: 'SortTrash'})">
+                    垃圾分类练习
+                  </h2>
                 </div>
+                <hr style="width: 100%; height: 1px; color:silver">
               </div>
               <div class="tableRow">
                 <div class="label">
@@ -112,7 +117,20 @@ export default {
     }
     this.changeCode()
   },
+  mounted () {
+    // 绑定事件
+    window.addEventListener('keydown', this.keyDown)
+  },
+  destroyed () {
+    window.removeEventListener('keydown', this.keyDown, false)
+  },
   methods: {
+    keyDown (e) {
+      // 如果是回车则执行登录方法
+      if (e.keyCode === 13) {
+        this.handleSubmit()
+      }
+    },
     changeCode () {
       const that = this
       request.get({url: 'api/code/getImgCode'}).then(res => {
@@ -125,7 +143,7 @@ export default {
 
     handleSubmit () {
       if (!this.formData.userCode || this.formData.userCode.length === 0) {
-        alert('验证码为空')
+        this.$message.error('验证码为空')
         return
       }
       let formData = {
@@ -143,12 +161,13 @@ export default {
         if (res.message === 'yes') {
           request.post({url: '/api/user/login', data: formData}).then(res => {
             that.clickType = true
-            if (res.status === 200) {
-              localStorage.setItem('access-token', res.token)
-              alert('登录成功')
+            if (res.message === 'success') {
+              localStorage.setItem('access-token', res.result.token)
+              localStorage.setItem('roles', JSON.stringify(res.result.roles))
+              this.$message.success('登录成功')
               that.$router.push({name: 'UserInfo'})
             } else {
-              alert(res.result)
+              this.$message.error(res.result)
             }
           }).catch(err => {
             that.clickType = true
@@ -157,7 +176,7 @@ export default {
         } else {
           that.formData.userCode = ''
           that.clickType = true
-          alert(res.result)
+          this.$message.error(res.result)
           that.changeCode()
         }
       }).catch(err => {
