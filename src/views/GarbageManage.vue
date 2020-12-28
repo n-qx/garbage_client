@@ -87,8 +87,13 @@
             width="120">
           </el-table-column>
           <el-table-column label="操作"
-            width="150">
+            width="240">
             <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleUpdate(scope.$index, scope.row)">上传图片
+              </el-button>
               <el-button
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)">修改
@@ -117,6 +122,7 @@
       </div>
       <add-garbage ref="addGarbage" :options="options" @ok="handleOK"></add-garbage>
       <edit-garbage ref="editGarbage" :options="options" @ok="handleOK"></edit-garbage>
+      <upload-file ref="uploadFile"></upload-file>
     </div>
   </div>
 </template>
@@ -125,10 +131,11 @@
 import request from '../utils/request'
 import AddGarbage from './module/AddGarbage'
 import EditGarbage from './module/EditGarbage'
+import UploadFile from './module/UploadFile'
 
 export default {
   name: 'GarbageManage',
-  components: {EditGarbage, AddGarbage},
+  components: {EditGarbage, AddGarbage, UploadFile},
   data () {
     return {
       styleMap: [
@@ -223,6 +230,9 @@ export default {
       this.fetchData()
     },
     handleSelectionChange () {
+    },
+    handleUpdate (index, row) {
+      this.$refs.uploadFile.show(row)
     },
     handleEdit (index, row) {
       // console.log(index, row)

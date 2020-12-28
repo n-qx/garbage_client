@@ -15,7 +15,7 @@ Vue.use(ElementUI) // 使用elementUI
 router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */
   const roles = JSON.parse(localStorage.getItem('roles'))
-  if (to.name !== 'Login' && to.name !== 'Register' && to.name !== 'SortTrash') {
+  if (to.name !== 'Login' && to.name !== 'Register' && to.name !== 'SortTrash' && to.path.indexOf('/file') === -1) {
     for (const role of roles) {
       if (to.meta.permission && to.meta.permission[0] === role.menuCode) {
         document.title = role.menuName

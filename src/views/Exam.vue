@@ -15,7 +15,7 @@
               <el-button type="primary" @click="handleSubmit">提交</el-button>
               <el-button
                 :disabled="loading"
-                @click="fetchData">重置题目</el-button>
+                @click="resetData">重置题目</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -34,6 +34,7 @@
           <el-col :span="6">
             <el-form-item label="总题数">
               <el-input
+                style="width: 120px;"
                 type="text"
                 v-model="dataInfo.total"
                 disabled>
@@ -43,6 +44,7 @@
           <el-col :span="6">
             <el-form-item label="答对题数">
               <el-input
+                style="width: 120px;"
                 type="text"
                 v-model="dataInfo.right"
                 disabled>
@@ -52,6 +54,7 @@
           <el-col :span="6">
             <el-form-item label="答错题数">
               <el-input
+                style="width: 120px;"
                 type="text"
                 v-model="dataInfo.wrong"
                 disabled>
@@ -61,6 +64,7 @@
           <el-col :span="6">
             <el-form-item label="未答题数">
               <el-input
+                style="width: 120px;"
                 type="text"
                 v-model="dataInfo.noAnswer"
                 disabled>
@@ -89,7 +93,19 @@
           <el-table-column
             prop="garbageFlag"
             label="垃圾种类"
-            width="180">
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="imageUrl"
+            label="查看图片"
+            width="120">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="primary"
+                @click="checkImage(scope.$index, scope.row)">查看图片
+              </el-button>
+            </template>
           </el-table-column>
           <el-table-column
             prop="answerId"
@@ -134,15 +150,18 @@
           </el-table-column>
         </el-table>
       </div>
+      <download-file ref="downloadFile"></download-file>
     </div>
   </div>
 </template>
 
 <script>
 import request from '../utils/request'
+import DownloadFile from './module/DownloadFile'
 
 export default {
   name: 'Exam',
+  components: {DownloadFile},
   data () {
     return {
       styleMap: [
@@ -214,6 +233,25 @@ export default {
   filters: {
   },
   methods: {
+    resetData () {
+      if (!this.uploaded) {
+        for (let data of this.tableData) {
+          if (data.answerId) {
+            const that = this
+            this.$confirm('你有未提交的答案，确定要重置吗', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              that.fetchData()
+            }).catch(() => {
+            })
+            return
+          }
+        }
+      }
+      this.fetchData()
+    },
     fetchData () {
       if (this.num > 100) {
         this.$message({
@@ -290,23 +328,33 @@ export default {
     },
     handleSubmit () {
       const that = this
-      request.postNoJSON({url: '/api/exam/addList', data: this.tableData}).then(res => {
-        if (res.message === 'error') {
-          that.$message({
-            type: 'error',
-            showClose: true,
-            message: res.result || '获取失败'
-          })
-        } else {
-          that.tableData = res.result
-          that.updateData()
-          that.uploaded = true
-        }
-        that.loading = false
-      }).catch(err => {
-        that.loading = false
-        console.log(err)
+      this.$confirm('确定要提交你的答案吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        request.postNoJSON({url: '/api/exam/addList', data: this.tableData}).then(res => {
+          if (res.message === 'error') {
+            that.$message({
+              type: 'error',
+              showClose: true,
+              message: res.result || '获取失败'
+            })
+          } else {
+            that.tableData = res.result
+            that.updateData()
+            that.uploaded = true
+          }
+          that.loading = false
+        }).catch(err => {
+          that.loading = false
+          console.log(err)
+        })
+      }).catch(() => {
       })
+    },
+    checkImage (index, row) {
+      this.$refs.downloadFile.show(row)
     }
   }
 }
