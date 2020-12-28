@@ -27,6 +27,8 @@
                 @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item>
@@ -95,25 +97,6 @@
             label="创建时间"
             width="120">
           </el-table-column>
-          <el-table-column label="操作"
-                           width="150">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">修改
-              </el-button>
-              <el-popconfirm
-                title="确定删除吗？"
-                @confirm="handleDelete(scope.$index, scope.row)"
-              >
-                <el-button
-                  size="mini"
-                  type="danger"
-                  slot="reference">删除
-                </el-button>
-              </el-popconfirm>
-            </template>
-          </el-table-column>
         </el-table>
         <div style="text-align: center;margin-top: 30px;">
           <el-pagination
@@ -124,20 +107,16 @@
           </el-pagination>
         </div>
       </div>
-      <add-garbage ref="addGarbage" :options="options" @ok="handleOK"></add-garbage>
-      <edit-garbage ref="editGarbage" :options="options" @ok="handleOK"></edit-garbage>
     </div>
   </div>
 </template>
 
 <script>
 import request from '../utils/request'
-import AddGarbage from './module/AddGarbage'
-import EditGarbage from './module/EditGarbage'
 
 export default {
   name: 'Analysis',
-  components: {EditGarbage, AddGarbage},
+  components: {},
   data () {
     return {
       styleMap: [
@@ -217,6 +196,8 @@ export default {
       request.postNoJSON({url: '/api/exam/list', data: req}).then(res => {
         if (res.message === 'success') {
           that.tableData = res.result.data
+          that.total = res.result.totalCount
+          console.log(res.result)
           for (let i = 0; i < that.tableData.length; i++) {
             if (that.tableData[i].answerId === that.tableData[i].sortId) {
               that.tableData[i].res = 0
@@ -246,32 +227,6 @@ export default {
       this.fetchData()
     },
     handleSelectionChange () {
-    },
-    handleEdit (index, row) {
-      // console.log(index, row)
-      this.$refs.editGarbage.show(row)
-    },
-    handleDelete (index, row) {
-      // console.log(index, row)
-      const that = this
-      request.postNoJSON({url: '/api/garbage/remove', data: row.garbageId.toString()}).then(res => {
-        if (res.result === 'error') {
-          that.$message.error(res.result)
-        } else {
-          that.$message.success('删除成功')
-          if (that.total % 10 === 0 && that.pageNo > 1) {
-            that.pageNo--
-          }
-          that.handleOK()
-          that.visible = false
-        }
-      }).catch(err => {
-        that.$message.error('删除失败')
-        console.log(err)
-      })
-    },
-    addGarbage () {
-      this.$refs.addGarbage.show()
     },
     handleOK () {
       this.$nextTick().then(() => {
