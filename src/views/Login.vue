@@ -143,7 +143,10 @@ export default {
 
     handleSubmit () {
       if (!this.formData.userCode || this.formData.userCode.length === 0) {
-        this.$message.error('验证码为空')
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '验证码为空'})
         return
       }
       let formData = {
@@ -164,10 +167,16 @@ export default {
             if (res.message === 'success') {
               localStorage.setItem('access-token', res.result.token)
               localStorage.setItem('roles', JSON.stringify(res.result.roles))
-              this.$message.success('登录成功')
+              this.$message({
+                type: 'success',
+                showClose: true,
+                message: '登录成功'})
               that.$router.push({name: 'UserInfo'})
             } else {
-              this.$message.error(res.result)
+              this.$message({
+                type: 'error',
+                showClose: true,
+                message: res.result || '登录失败'})
             }
           }).catch(err => {
             that.clickType = true
@@ -176,7 +185,10 @@ export default {
         } else {
           that.formData.userCode = ''
           that.clickType = true
-          this.$message.error(res.result)
+          this.$message({
+            type: 'error',
+            showClose: true,
+            message: res.result || '登录失败'})
           that.changeCode()
         }
       }).catch(err => {

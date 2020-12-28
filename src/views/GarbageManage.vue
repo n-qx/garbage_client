@@ -200,7 +200,10 @@ export default {
           that.tableData = res.result.data
           that.total = res.result.totalCount
         } else {
-          this.$message.error('查询失败')
+          this.$message({
+            type: 'error',
+            showClose: true,
+            message: '查询失败'})
         }
         that.loading = false
       }).catch(err => {
@@ -230,9 +233,15 @@ export default {
       const that = this
       request.postNoJSON({url: '/api/garbage/remove', data: row.garbageId.toString()}).then(res => {
         if (res.result === 'error') {
-          that.$message.error(res.result)
+          this.$message({
+            type: 'error',
+            showClose: true,
+            message: res.result || '删除失败'})
         } else {
-          that.$message.success('删除成功')
+          this.$message({
+            type: 'success',
+            showClose: true,
+            message: '删除成功'})
           if (that.total % 10 === 0 && that.pageNo > 1) {
             that.pageNo--
           }
@@ -240,7 +249,10 @@ export default {
           that.visible = false
         }
       }).catch(err => {
-        that.$message.error('删除失败')
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '删除失败'})
         console.log(err)
       })
     },

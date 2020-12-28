@@ -3,43 +3,70 @@
     <div class="center">
       <el-form status-icon ref="form" label-width="100px" class="demo-ruleForm">
         <el-row>
-          <el-col :span="8">
-            <el-form-item label="垃圾类别">
-              <el-select v-model="queryParam.garbageType" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
+          <el-col :span="12">
+            <el-form-item label="题目数量">
+              <el-input
+                type="number"
+                v-model="num"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item label="垃圾种类">
-              <el-input type="text" v-model="queryParam.garbageFlag"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="垃圾名称">
-              <el-input type="text" v-model="queryParam.garbageName"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item>
-              <el-button type="primary" @click="fetchData">查询</el-button>
-              <el-button @click="queryParam={}">重置</el-button>
+              <el-button type="primary" @click="handleSubmit">提交</el-button>
+              <el-button
+                :disabled="loading"
+                @click="fetchData">重置题目</el-button>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-form-item>
-            <el-col :span="8">
-              <el-button type="primary" @click="addGarbage">新增</el-button>
-            </el-col>
-          </el-form-item>
+          <el-col :span="24">
+            <el-form-item label="题目序列号">
+              <el-input
+                type="text"
+                v-model="examSn"
+                disabled>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="总题数">
+              <el-input
+                type="text"
+                v-model="dataInfo.total"
+                disabled>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="答对题数">
+              <el-input
+                type="text"
+                v-model="dataInfo.right"
+                disabled>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="答错题数">
+              <el-input
+                type="text"
+                v-model="dataInfo.wrong"
+                disabled>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="未答题数">
+              <el-input
+                type="text"
+                v-model="dataInfo.noAnswer"
+                disabled>
+              </el-input>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div>
@@ -48,88 +75,77 @@
           :data="tableData"
           v-loading="loading"
           tooltip-effect="dark"
-          style="width: 100%"
-          @selection-change="handleSelectionChange">
+          style="width: 100%">
           <el-table-column
-            type="selection"
-            width="55">
-          </el-table-column>
-          <el-table-column
-            prop="garbageId"
+            prop="key"
             label="序号"
             width="55">
           </el-table-column>
           <el-table-column
             prop="garbageName"
             label="垃圾名称"
-            width="150">
-          </el-table-column>
-          <el-table-column
-            prop="sortId"
-            label="垃圾类别"
-            width="120">
-            <template slot-scope="scope">
-              <el-tag
-                :type="sortType[scope.row.sortId].style"
-                disable-transitions>{{ sortType[scope.row.sortId].name }}</el-tag>
-            </template>
+            width="180">
           </el-table-column>
           <el-table-column
             prop="garbageFlag"
             label="垃圾种类"
-            width="120">
+            width="180">
           </el-table-column>
           <el-table-column
-            prop="gmtCreate"
-            label="创建时间"
-            width="120">
-          </el-table-column>
-          <el-table-column label="操作"
-                           width="150">
+            prop="answerId"
+            label="你的答案"
+            width="180">
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">修改
-              </el-button>
-              <el-popconfirm
-                title="确定删除吗？"
-                @confirm="handleDelete(scope.$index, scope.row)"
-              >
-                <el-button
-                  size="mini"
-                  type="danger"
-                  slot="reference">删除
-                </el-button>
-              </el-popconfirm>
+              <el-select
+                :disabled="uploaded"
+                @change="onChange(scope)"
+                v-model="scope.row.answerId"
+                placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="sortId"
+            label="正确答案"
+            width="120">
+            <template slot-scope="scope">
+              <el-tag
+                v-if="scope.row.sortId"
+                :type="styleMap[scope.row.sortId].style"
+                disable-transitions>{{ styleMap[scope.row.sortId].name }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="answerState"
+            label=""
+            width="85">
+            <template slot-scope="scope">
+              <el-tag
+                v-if="scope.row.answerState >= 0 && scope.row.answerState < 3"
+                :type="styleMap2[scope.row.answerState].style"
+                disable-transitions>{{ styleMap2[scope.row.answerState].name }}</el-tag>
             </template>
           </el-table-column>
         </el-table>
-        <div style="text-align: center;margin-top: 30px;">
-          <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="total"
-            @current-change="current_change">
-          </el-pagination>
-        </div>
       </div>
-      <add-garbage ref="addGarbage" :options="options" @ok="handleOK"></add-garbage>
-      <edit-garbage ref="editGarbage" :options="options" @ok="handleOK"></edit-garbage>
     </div>
   </div>
 </template>
 
 <script>
 import request from '../utils/request'
-import AddGarbage from './module/AddGarbage'
-import EditGarbage from './module/EditGarbage'
 
 export default {
   name: 'Exam',
-  components: {EditGarbage, AddGarbage},
   data () {
     return {
-      sortType: [
+      styleMap: [
         {
           style: ''
         },
@@ -150,6 +166,20 @@ export default {
           name: '其他垃圾'
         }
       ],
+      styleMap2: [
+        {
+          style: 'info',
+          name: '未答题'
+        },
+        {
+          style: 'success',
+          name: '答对了'
+        },
+        {
+          style: 'danger',
+          name: '答错了'
+        }
+      ],
       options: [
         {
           value: 1,
@@ -168,12 +198,13 @@ export default {
           label: '其他垃圾'
         }
       ],
+      examSn: '',
       queryParam: {},
       tableData: [],
-      multipleSelection: [],
-      total: 0,
-      pageSize: 10,
-      currentPage: 1,
+      dataInfo: {
+      },
+      uploaded: false,
+      num: 10,
       loading: false
     }
   },
@@ -184,21 +215,35 @@ export default {
   },
   methods: {
     fetchData () {
-      let req = {
-        pageNo: this.currentPage,
-        pageSize: this.pageSize,
-        // sortField: '',
-        // sortOrder: '',
-        queryParam: JSON.stringify(this.queryParam)
+      if (this.num > 100) {
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '题目数量过大'})
+        return
+      }
+      let numStr = this.num.toString()
+      if (numStr === null || numStr.length === 0) {
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '题目数量有误'})
+        return
       }
       this.loading = true
       const that = this
-      request.postNoJSON({url: '/api/garbage/list4Table', data: req}).then(res => {
-        if (res.message === 'success') {
-          that.tableData = res.result.data
-          that.total = res.result.totalCount
+      request.postNoJSON({url: '/api/exam/getList', data: numStr}).then(res => {
+        if (res.message === 'error') {
+          that.$message({
+            type: 'error',
+            showClose: true,
+            message: res.result || '获取失败'
+          })
         } else {
-          this.$message.error('查询失败')
+          that.clearData()
+          that.uploaded = false
+          that.tableData = res.result
+          that.examSn = that.tableData[0].examSn
         }
         that.loading = false
       }).catch(err => {
@@ -206,48 +251,61 @@ export default {
         console.log(err)
       })
     },
-    goto (val) {
-      this.$router.push({name: val})
+    onChange (scope) {
+      // console.log(scope.row)
     },
-    goBack () {
-      this.$router.back()
+    clearData () {
+      this.dataInfo = {
+        total: null,
+        right: null,
+        wrong: null,
+        noAnswer: null
+      }
     },
-
-    current_change (currentPage) {
-      this.currentPage = currentPage
-      this.fetchData()
-    },
-    handleSelectionChange () {
-    },
-    handleEdit (index, row) {
-      // console.log(index, row)
-      this.$refs.editGarbage.show(row)
-    },
-    handleDelete (index, row) {
-      // console.log(index, row)
-      const that = this
-      request.postNoJSON({url: '/api/garbage/remove', data: row.garbageId.toString()}).then(res => {
-        if (res.result === 'error') {
-          that.$message.error(res.result)
+    updateData () {
+      this.dataInfo = {
+        total: this.tableData.length,
+        right: 0,
+        wrong: 0,
+        noAnswer: 0
+      }
+      for (let i = 0; i < this.tableData.length; i++) {
+        let data = this.tableData[i]
+        if (!data.answerId) {
+          this.dataInfo.noAnswer++
+          data.answerState = 0
+        } else if (data.answerId === data.sortId) {
+          this.dataInfo.right++
+          data.answerState = 1
         } else {
-          that.$message.success('删除成功')
-          if (that.total % 10 === 0 && that.pageNo > 1) {
-            that.pageNo--
-          }
-          that.handleOK()
-          that.visible = false
+          this.dataInfo.wrong++
+          data.answerState = 2
         }
-      }).catch(err => {
-        that.$message.error('删除失败')
-        console.log(err)
-      })
-    },
-    addGarbage () {
-      this.$refs.addGarbage.show()
+      }
     },
     handleOK () {
       this.$nextTick().then(() => {
         this.fetchData()
+      })
+    },
+    handleSubmit () {
+      const that = this
+      request.postNoJSON({url: '/api/exam/addList', data: this.tableData}).then(res => {
+        if (res.message === 'error') {
+          that.$message({
+            type: 'error',
+            showClose: true,
+            message: res.result || '获取失败'
+          })
+        } else {
+          that.tableData = res.result
+          that.updateData()
+          that.uploaded = true
+        }
+        that.loading = false
+      }).catch(err => {
+        that.loading = false
+        console.log(err)
       })
     }
   }

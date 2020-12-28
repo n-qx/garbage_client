@@ -153,11 +153,11 @@ export default {
             this.bins[i].showHand = false
           }
           this.controlState = 1
-          this.delayRandom(200)
+          this.delayRandom(500)
         }
         // 循环时，递归中的函数进入下一次递归
         if (this.controlState === 1 && value === 2) {
-          this.delayRandom(200)
+          this.delayRandom(500)
         }
       } else {
         // 防止多次停止
@@ -196,9 +196,15 @@ export default {
     },
     choseGarbage (i) {
       if (this.controlState === 1) {
-        this.$message.error('请点击停止')
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '请点击停止'})
       } else if (this.garbage.garbageName.length === 0 || this.gameInfo.answerState > 0) {
-        this.$message.error('请点击开始')
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '请点击开始'})
       } else {
         this.garbage.sortId = this.sortMap[i]
         const that = this

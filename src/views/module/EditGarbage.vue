@@ -86,14 +86,23 @@ export default {
         if (valid) {
           request.postNoJSON({url: '/api/garbage/update', data: that.garbage}).then(res => {
             if (res.result === 'error') {
-              that.$message.error(res.result)
+              this.$message({
+                type: 'error',
+                showClose: true,
+                message: res.result || '修改失败'})
             } else {
-              that.$message.success('修改成功')
+              this.$message({
+                type: 'success',
+                showClose: true,
+                message: '修改成功'})
               that.visible = false
               that.$emit('ok')
             }
           }).catch(err => {
-            that.$message.error('修改失败')
+            this.$message({
+              type: 'error',
+              showClose: true,
+              message: '修改失败'})
             console.log(err)
           })
         } else {

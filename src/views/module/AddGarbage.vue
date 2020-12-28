@@ -84,14 +84,23 @@ export default {
         if (valid) {
           request.postNoJSON({url: '/api/garbage/add', data: that.garbage}).then(res => {
             if (res.result === 'error') {
-              that.$message.error(res.result)
+              this.$message({
+                type: 'error',
+                showClose: true,
+                message: res.result || '添加失败'})
             } else {
-              that.$message.success('添加成功')
+              this.$message({
+                type: 'success',
+                showClose: true,
+                message: '添加成功'})
               that.visible = false
               that.$emit('ok')
             }
           }).catch(err => {
-            that.$message.error('添加失败')
+            this.$message({
+              type: 'error',
+              showClose: true,
+              message: '添加失败'})
             console.log(err)
           })
         } else {

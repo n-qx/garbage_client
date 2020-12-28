@@ -134,24 +134,39 @@ export default {
         phone.length > 0 && password.length > 0 && checkPwd.length > 0 && userName.length > 0 &&
         idNumber.length > 0
       if (!flag) {
-        this.$message.error('信息填写不完整！')
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '信息填写不完整'})
         return false
       }
       if (!this.phoneRe.test(phone)) {
-        this.$message.error('手机号格式不正确！')
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '手机号格式不正确'})
         return false
       }
       if (password === checkPwd) {
         if (!this.pwdRe.test(checkPwd)) {
-          this.$message.error('登录密码格式不正确！')
+          this.$message({
+            type: 'error',
+            showClose: true,
+            message: '登录密码格式不正确'})
           return false
         }
       } else {
-        this.$message.error('确认密码必须和输入的密码相同！')
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '确认密码必须和输入的密码相同'})
         return false
       }
       if (!this.cardRe.test(idNumber)) {
-        this.$message.error('身份证号格式不正确！')
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '身份证号格式不正确'})
         return false
       }
       return true
@@ -174,10 +189,16 @@ export default {
           request.postNoJSON({url: '/api/user/register', data: form}).then(res => {
             that.clickType = true
             if (res.message !== 'error') {
-              this.$message.success('注册成功，欢迎登录')
+              this.$message({
+                type: 'success',
+                showClose: true,
+                message: '注册成功，请等待管理员审核'})
               that.$router.push({name: 'Login'})
             } else {
-              this.$message.error(res.result)
+              this.$message({
+                type: 'error',
+                showClose: true,
+                message: res.result || '注册失败'})
             }
           }).catch(err => {
             that.clickType = true
@@ -185,7 +206,10 @@ export default {
           })
         } else {
           that.clickType = true
-          this.$message.error(res.result)
+          this.$message({
+            type: 'error',
+            showClose: true,
+            message: res.result || '注册失败'})
         }
       }).catch(err => {
         that.clickType = true

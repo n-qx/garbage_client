@@ -74,7 +74,10 @@ export default {
           that.tableData = res.result.data
           that.total = res.result.totalCount
         } else {
-          this.$message.error('查询失败')
+          this.$message({
+            type: 'error',
+            showClose: true,
+            message: '查询失败'})
         }
         that.loading = false
       }).catch(err => {
