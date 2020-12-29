@@ -78,27 +78,27 @@
           </el-table-column>
           <el-table-column
             prop="total"
-            label="答题次数"
+            label="答题总数"
             width="120">
           </el-table-column>
           <el-table-column
             prop="right"
-            label="正确次数"
+            label="答对题数"
             width="120">
           </el-table-column>
           <el-table-column
             prop="wrong"
-            label="错误次数"
+            label="答错题数"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="noAnswer"
+            label="未答题数"
             width="120">
           </el-table-column>
           <el-table-column
             prop="accuracyShow"
             label="正确率"
-            width="120">
-          </el-table-column>
-          <el-table-column
-            prop="gmtCreate"
-            label="创建时间"
             width="120">
           </el-table-column>
         </el-table>
@@ -149,7 +149,7 @@ export default {
       ],
       options: [
         {
-          value: null,
+          value: 'asc',
           label: '升序'
         },
         {
@@ -179,7 +179,7 @@ export default {
         pageNo: this.currentPage,
         pageSize: this.pageSize,
         sortField: this.sortField,
-        sortOrder: this.sortOrder,
+        sortOrder: this.sortOrder == null ? 'desc' : this.sortOrder,
         queryParam: JSON.stringify(this.queryParam)
       }
       this.loading = true

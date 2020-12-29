@@ -14,6 +14,21 @@
         <el-form-item label="身份证号" style="display: flex; flex-direction: row">
           <el-input style="margin-left: 16px" v-model="userInfo.idNumber" disabled></el-input>
         </el-form-item>
+        <el-form-item label="正确率" style="display: flex; flex-direction: row">
+          <el-input style="margin-left: 16px" v-model="userInfo.accuracy" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="答题总数" style="display: flex; flex-direction: row">
+          <el-input style="margin-left: 16px" v-model="userInfo.total" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="答对题数" style="display: flex; flex-direction: row">
+          <el-input style="margin-left: 16px" v-model="userInfo.right" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="答错题数" style="display: flex; flex-direction: row">
+          <el-input style="margin-left: 16px" v-model="userInfo.wrong" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="未答题数" style="display: flex; flex-direction: row">
+          <el-input style="margin-left: 16px" v-model="userInfo.noAnswer" disabled></el-input>
+        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -32,6 +47,7 @@ export default {
   created () {
     const that = this
     request.postNoJSON({url: '/api/user/userInfo'}).then(res => {
+      // console.log(res)
       if (res.message === 'error') {
         that.$notify.error({
           title: '错误',
@@ -39,6 +55,8 @@ export default {
         })
       } else {
         that.userInfo = res.result
+        that.userInfo.noAnswer = res.result.total - res.result.right - res.result.wrong
+        that.userInfo.accuracy = (res.result.total === 0 ? 0 : res.result.right / res.result.total * 100) + '%'
         if (res.result.roleId === 1) {
           that.userInfo.roleName = '管理员'
         } else {

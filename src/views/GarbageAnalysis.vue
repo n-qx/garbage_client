@@ -72,11 +72,6 @@
             width="150">
           </el-table-column>
           <el-table-column
-            prop="garbageFlag"
-            label="垃圾种类"
-            width="150">
-          </el-table-column>
-          <el-table-column
             prop="total"
             label="答题次数"
             width="120">
@@ -92,13 +87,13 @@
             width="120">
           </el-table-column>
           <el-table-column
-            prop="accuracyShow"
-            label="正确率"
+            prop="noAnswer"
+            label="未答次数"
             width="120">
           </el-table-column>
           <el-table-column
-            prop="gmtCreate"
-            label="创建时间"
+            prop="accuracyShow"
+            label="正确率"
             width="120">
           </el-table-column>
         </el-table>
@@ -149,7 +144,7 @@ export default {
       ],
       options: [
         {
-          value: null,
+          value: 'asc',
           label: '升序'
         },
         {
@@ -179,10 +174,9 @@ export default {
         pageNo: this.currentPage,
         pageSize: this.pageSize,
         sortField: this.sortField,
-        sortOrder: this.sortOrder,
+        sortOrder: this.sortOrder == null ? 'desc' : this.sortOrder,
         queryParam: JSON.stringify(this.queryParam)
       }
-      console.log(req)
       this.loading = true
       const that = this
       request.postNoJSON({url: '/api/garbage/statistics', data: req}).then(res => {
