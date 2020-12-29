@@ -143,7 +143,7 @@
             width="85">
             <template slot-scope="scope">
               <el-tag
-                v-if="scope.row.answerState >= 0 && scope.row.answerState < 3"
+                v-if="scope.row.answerState !== null"
                 :type="styleMap2[scope.row.answerState].style"
                 disable-transitions>{{ styleMap2[scope.row.answerState].name }}</el-tag>
             </template>
@@ -300,33 +300,41 @@ export default {
         noAnswer: null
       }
     },
-    updateData () {
-      this.dataInfo = {
-        total: this.tableData.length,
-        right: 0,
-        wrong: 0,
-        noAnswer: 0
-      }
-      for (let i = 0; i < this.tableData.length; i++) {
-        let data = this.tableData[i]
-        if (!data.answerId) {
-          this.dataInfo.noAnswer++
-          data.answerState = 0
-        } else if (data.answerId === data.sortId) {
-          this.dataInfo.right++
-          data.answerState = 1
-        } else {
-          this.dataInfo.wrong++
-          data.answerState = 2
-        }
-      }
-    },
+    // updateData () {
+    //   this.dataInfo = {
+    //     total: this.tableData.length,
+    //     right: 0,
+    //     wrong: 0,
+    //     noAnswer: 0
+    //   }
+    //   for (let i = 0; i < this.tableData.length; i++) {
+    //     let data = this.tableData[i]
+    //     if (!data.answerId) {
+    //       this.dataInfo.noAnswer++
+    //       data.answerState = 0
+    //     } else if (data.answerId === data.sortId) {
+    //       this.dataInfo.right++
+    //       data.answerState = 1
+    //     } else {
+    //       this.dataInfo.wrong++
+    //       data.answerState = 2
+    //     }
+    //   }
+    // },
     handleOK () {
       this.$nextTick().then(() => {
         this.fetchData()
       })
     },
     handleSubmit () {
+      if (this.uploaded) {
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: '题目已提交'
+        })
+        return
+      }
       const that = this
       this.$confirm('确定要提交你的答案吗', '提示', {
         confirmButtonText: '确定',
@@ -341,8 +349,14 @@ export default {
               message: res.result || '获取失败'
             })
           } else {
-            that.tableData = res.result
-            that.updateData()
+            const r = res.result
+            that.tableData = r.data
+            that.dataInfo = {
+              total: r.total,
+              right: r.right,
+              wrong: r.wrong,
+              noAnswer: r.total - r.right - r.wrong
+            }
             that.uploaded = true
           }
           that.loading = false

@@ -12,14 +12,24 @@
         <div class="menu">
           <el-menu style="border: none"
                    @select="handleSelect"
-                   :default-active="$route.path.substr($route.path.lastIndexOf('/') + 1)"
+                   :default-active="$route.path"
                    class="el-menu-demo"
                    mode="horizontal"
                    router>
             <el-menu-item
               v-for="menu in menuList"
-              v-bind:key="menu.id"
-              :index="menu.index">{{ menu.name }}</el-menu-item>
+              v-bind:key="menu.menuId"
+              :index="nameMap[menu.menuSort]">{{ menu.menuName }}</el-menu-item>
+            <el-submenu
+              v-for="menu in menuList2"
+              v-bind:key="menu.menuId"
+              :index="nameMap[menu.menuSort]">
+                <template slot="title">{{ menu.menuName }}</template>
+                <el-menu-item
+                  v-for="subMenu in menu.children"
+                  v-bind:key="subMenu.menuSort"
+                  :index="subNameMap[subMenu.menuSort]">{{ subMenu.menuName }}</el-menu-item>
+            </el-submenu>
           </el-menu>
         </div>
         <div class="menu_right">
@@ -48,20 +58,35 @@ export default {
   data () {
     return {
       menuList: [],
-      active: ''
+      menuList2: [],
+      active: '',
+      nameMap: {
+        1: '/menu/userInfo',
+        2: '/menu/userManage',
+        3: '/menu/garbageManage',
+        4: '/menu/analysis',
+        5: '/menu/exam'
+      },
+      subNameMap: {
+        1: '/menu/analysis/garbageAnalysis',
+        2: '/menu/analysis/userAnalysis',
+        3: '/menu/analysis/examLog'
+      }
     }
   },
   created () {
     const list = JSON.parse(localStorage.getItem('roles'))
     this.menuList = []
+    this.menuList2 = []
     for (let item of list) {
-      if (item.menuCode.length > 4 && item.menuCode.indexOf('menu') !== -1) {
-        let menu = {
-          id: item.menuId,
-          index: item.menuCode.substr(5),
-          name: item.menuName
+      if (item.menuCode === 'menu') {
+        for (let menu of item.children) {
+          if (menu.children.length > 0) {
+            this.menuList2.push(menu)
+          } else {
+            this.menuList.push(menu)
+          }
         }
-        this.menuList.push(menu)
       }
     }
   },

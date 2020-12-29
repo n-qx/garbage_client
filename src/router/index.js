@@ -10,6 +10,9 @@ import PageView from '../Layout/PageView'
 import MenuLayout from '../Layout/MenuLayout'
 import UserManage from '../views/UserManage'
 import Exam from '../views/Exam'
+import GarbageAnalysis from '../views/GarbageAnalysis'
+import UserAnalysis from '../views/UserAnalysis'
+import ExamLog from '../views/ExamLog'
 
 Vue.use(Router)
 
@@ -27,7 +30,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: 'login',
+      redirect: '/login',
       component: PageView,
       children: [
         {
@@ -60,12 +63,12 @@ export default new Router({
         {
           path: '/menu',
           name: 'Menu',
-          redirect: 'userInfo',
+          redirect: '/menu/userInfo',
           component: MenuLayout,
           meta: { permission: ['menu'] },
           children: [
             {
-              path: 'userInfo',
+              path: '/menu/userInfo',
               name: 'UserInfo',
               component: UserInfo,
               meta: {
@@ -74,7 +77,7 @@ export default new Router({
               }
             },
             {
-              path: 'userManage',
+              path: '/menu/userManage',
               name: 'UserManage',
               component: UserManage,
               meta: {
@@ -83,7 +86,7 @@ export default new Router({
               }
             },
             {
-              path: 'garbageManage',
+              path: '/menu/garbageManage',
               name: 'GarbageManage',
               component: GarbageManage,
               meta: {
@@ -92,13 +95,43 @@ export default new Router({
               }
             },
             {
-              path: 'analysis',
+              path: '/menu/analysis',
               name: 'Analysis',
+              redirect: '/menu/analysis/garbageAnalysis',
               component: Analysis,
               meta: {
                 keepAlive: true,
                 permission: ['menu-analysis']
-              }
+              },
+              children: [
+                {
+                  path: '/menu/analysis/garbageAnalysis',
+                  name: 'GarbageAnalysis',
+                  component: GarbageAnalysis,
+                  meta: {
+                    keepAlive: true,
+                    permission: ['menu-analysis-garbage']
+                  }
+                },
+                {
+                  path: '/menu/analysis/userAnalysis',
+                  name: 'UserAnalysis',
+                  component: UserAnalysis,
+                  meta: {
+                    keepAlive: true,
+                    permission: ['menu-analysis-user']
+                  }
+                },
+                {
+                  path: '/menu/analysis/examLog',
+                  name: 'ExamLog',
+                  component: ExamLog,
+                  meta: {
+                    keepAlive: true,
+                    permission: ['menu-analysis-exam']
+                  }
+                }
+              ]
             },
             {
               path: 'exam',

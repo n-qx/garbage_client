@@ -68,7 +68,14 @@
                     fit="fill"
                     @click="changeCode(this)"
                     id="codeImage"
-                    ref="codeImage"></el-image>
+                    ref="codeImage">
+                    <div
+                      v-if="loading"
+                      slot="error"
+                      class="image-slot">
+                      加载中
+                    </div>
+                  </el-image>
                 </div>
               </div>
               <div class="buttons">
@@ -112,7 +119,8 @@ export default {
       imgInfo: {
         src: '',
         imgCodeKey: ''
-      }
+      },
+      loading: true
     }
   },
   created () {
@@ -137,11 +145,14 @@ export default {
       }
     },
     changeCode () {
+      this.loading = true
       const that = this
       request.get({url: 'api/code/getImgCode'}).then(res => {
         that.imgInfo.src = res.data
         that.imgInfo.imgCodeKey = res.imgCodeKey
+        that.loading = false
       }).catch(err => {
+        that.loading = false
         console.log(err)
       })
     },
