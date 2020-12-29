@@ -4,7 +4,7 @@
       <el-form status-icon ref="form" label-width="100px" class="demo-ruleForm">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="garbageFlag">
+            <el-form-item label="垃圾种类">
               <el-input
                 type="text"
                 v-model="queryParam.garbageFlag"
@@ -48,7 +48,7 @@
           <el-col :span="8">
             <el-form-item>
               <el-button type="primary" @click="fetchData">查询</el-button>
-              <el-button @click="queryParam={}">重置</el-button>
+              <el-button @click="clearAll">重置</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -72,18 +72,23 @@
             width="150">
           </el-table-column>
           <el-table-column
+            prop="garbageFlag"
+            label="垃圾种类"
+            width="150">
+          </el-table-column>
+          <el-table-column
             prop="total"
-            label="答题总数"
+            label="答题次数"
             width="120">
           </el-table-column>
           <el-table-column
             prop="right"
-            label="正确题数"
+            label="正确次数"
             width="120">
           </el-table-column>
           <el-table-column
             prop="wrong"
-            label="错误题数"
+            label="错误次数"
             width="120">
           </el-table-column>
           <el-table-column
@@ -127,20 +132,24 @@ export default {
       styleMap: [
         {
           value: 'total',
-          label: '答题总数'
+          label: '答题次数'
         },
         {
-          value: 'right',
-          label: '正确题数'
+          value: 'g.right',
+          label: '正确次数'
         },
         {
           value: 'wrong',
-          label: '错误题数'
+          label: '错误次数'
+        },
+        {
+          value: 'accuracy',
+          label: '正确率'
         }
       ],
       options: [
         {
-          value: 'asc',
+          value: null,
           label: '升序'
         },
         {
@@ -201,7 +210,11 @@ export default {
     goBack () {
       this.$router.back()
     },
-
+    clearAll () {
+      this.queryParam = {}
+      this.sortField = null
+      this.sortOrder = null
+    },
     current_change (currentPage) {
       this.currentPage = currentPage
       this.fetchData()
