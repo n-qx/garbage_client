@@ -182,6 +182,7 @@ export default {
             that.clickType = true
             if (res.message === 'success') {
               localStorage.setItem('access-token', res.result.token)
+              localStorage.setItem('roleId', res.result.roleId)
               localStorage.setItem('roles', JSON.stringify(res.result.roles))
               this.$message({
                 type: 'success',

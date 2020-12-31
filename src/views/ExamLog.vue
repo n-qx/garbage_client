@@ -4,11 +4,21 @@
       <el-form status-icon ref="form" label-width="100px" class="demo-ruleForm">
         <el-row>
           <el-col :span="8">
-            <el-form-item label="用户姓名">
+            <el-form-item label="用户姓名" v-if="roleId === '1'">
               <el-input
                 type="text"
                 v-model="queryParam.userName"
                 @keyup.enter.native="fetchData"></el-input>
+            </el-form-item>
+            <el-form-item label="是否正确" v-else>
+              <el-select v-model="queryParam.answerState" placeholder="请选择">
+                <el-option
+                  v-for="(item, i) in styleMap2"
+                  :key="i"
+                  :label="item.name"
+                  :value="i">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -29,14 +39,12 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item>
                 <el-button type="primary" @click="fetchData">查询</el-button>
                 <el-button @click="queryParam={}">重置</el-button>
               </el-form-item>
             </el-col>
-          </el-row>
         </el-row>
       </el-form>
       <div>
@@ -68,8 +76,12 @@
             width="120">
             <template slot-scope="scope">
               <el-tag
+                v-if="scope.row.answerId !== null"
                 :type="styleMap[scope.row.answerId].style"
                 disable-transitions>{{ styleMap[scope.row.answerId].name }}</el-tag>
+              <el-tag
+                v-else
+                type="warning">未答题</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -83,19 +95,15 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="res"
-            label="是否正确"
-            width="120">
+            prop="answerState"
+            label=""
+            width="85">
             <template slot-scope="scope">
               <el-tag
-                :type="pdMap[scope.row.res].style"
-                disable-transitions>{{ pdMap[scope.row.res].name }}</el-tag>
+                v-if="scope.row.answerState !== null"
+                :type="styleMap2[scope.row.answerState].style"
+                disable-transitions>{{ styleMap2[scope.row.answerState].name }}</el-tag>
             </template>
-          </el-table-column>
-          <el-table-column
-            prop="gmtCreate"
-            label="创建时间"
-            width="120">
           </el-table-column>
         </el-table>
         <div style="text-align: center;margin-top: 30px;">
@@ -140,14 +148,18 @@ export default {
           name: '其他垃圾'
         }
       ],
-      pdMap: [
+      styleMap2: [
+        {
+          style: 'info',
+          name: '未答题'
+        },
         {
           style: 'success',
-          name: '正确'
+          name: '答对了'
         },
         {
           style: 'danger',
-          name: '错误'
+          name: '答错了'
         }
       ],
       options: [
@@ -174,10 +186,12 @@ export default {
       total: 0,
       pageSize: 10,
       currentPage: 1,
-      loading: false
+      loading: false,
+      roleId: 2
     }
   },
   created () {
+    this.roleId = localStorage.getItem('roleId')
     this.fetchData()
   },
   filters: {
@@ -197,11 +211,15 @@ export default {
         if (res.message === 'success') {
           that.tableData = res.result.data
           that.total = res.result.totalCount
-          for (let i = 0; i < that.tableData.length; i++) {
-            if (that.tableData[i].answerId === that.tableData[i].sortId) {
-              that.tableData[i].res = 0
+          for (let data of that.tableData) {
+            if (data.answerId === null) {
+              data.answerState = 0
             } else {
-              that.tableData[i].res = 1
+              if (data.answerId === data.sortId) {
+                data.answerState = 1
+              } else {
+                data.answerState = 2
+              }
             }
           }
         } else {
