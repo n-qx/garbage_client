@@ -93,7 +93,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           request.postNoJSON({url: '/api/user/update', data: that.user}).then(res => {
-            if (res.result === 'error') {
+            if (res.message === 'error') {
               this.$message({
                 type: 'error',
                 showClose: true,

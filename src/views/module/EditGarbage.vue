@@ -85,7 +85,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           request.postNoJSON({url: '/api/garbage/update', data: that.garbage}).then(res => {
-            if (res.result === 'error') {
+            if (res.message === 'error') {
               this.$message({
                 type: 'error',
                 showClose: true,

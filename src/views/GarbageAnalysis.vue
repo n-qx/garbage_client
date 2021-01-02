@@ -226,7 +226,7 @@ export default {
       // console.log(index, row)
       const that = this
       request.postNoJSON({url: '/api/garbage/remove', data: row.garbageId.toString()}).then(res => {
-        if (res.result === 'error') {
+        if (res.message === 'error') {
           this.$message({
             type: 'error',
             showClose: true,
