@@ -1,73 +1,81 @@
 <template>
   <div class="body">
-    <div class="center">
-      <div class="table" style="width: 800px;">
-        <div class="table_row" style="width: 600px;">
-          <div class="table_block" v-for="(bin, i) in bins" v-bind:key="i">
-            <div class="hand_garbage">
-              <div class="hand">
-                <img v-if="bin.showHand" src="../img/hand.png" class="img" alt="">
+    <div class="sortTrash-container">
+      <div class="login-top">
+        <img src="../img/login-icon.jpg" class="login-icon" alt="欢迎注册">
+        <div class="login-icon-tip">欢迎来到垃圾分类小游戏</div>
+      </div>
+      <div class="sortTrash-content">
+        <div class="sortTrash-content-warp">
+          <!--垃圾滚动框-->
+          <div class="table_row">
+            <div class="table_block">
+              <div class="garbage_name" id="garbage_name">
+                {{ garbage.garbageName }}
               </div>
-              <div class="garbage_type" @mouseenter="onMouseOver(i)" @mouseleave="onMouseOut(i)"
-                   @click="choseGarbage(i)">
-                <img :src="bin.imgUrl" class="img" style="cursor: pointer;" alt="">
+            </div>
+          </div>
+          <!--垃圾桶图片-->
+          <div class="table_row" style="width: 600px;">
+            <div class="table_block" v-for="(bin, i) in bins" v-bind:key="i">
+              <div class="hand_garbage">
+                <div class="hand">
+                  <img v-if="bin.showHand" src="../img/02.jpg" class="img" alt="">
+                </div>
+                <div class="garbage_type" @mouseenter="onMouseOver(i)" @mouseleave="onMouseOut(i)"
+                     @click="choseGarbage(i)">
+                  <img :src="bin.imgUrl" class="img" style="cursor: pointer;" alt="">
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="table_row">
-          <div class="table_block">
-            <div class="garbage_name" id="garbage_name">
-              {{ garbage.garbageName }}
+
+          <div class="table_row" style="width: 600px;height: 50px">
+            <div class="table_block">
+              <div class="garbage_control" @click="control(1)">开始</div>
+            </div>
+            <div class="table_block">
+              <div class="garbage_control" @click="control(0)">停止</div>
             </div>
           </div>
-        </div>
-        <div class="table_row" style="width: 600px;height: 50px">
-          <div class="table_block">
-            <div class="garbage_control" @click="control(1)">
-              开始
+          <div class="table_row" style="height: 70px;">
+            <div class="answer_state" v-if="gameInfo.answerState === 1">
+              <img class="answer_image" src="../img/right.png" alt="答对了">
+              <div class="answer_tips">恭喜你，答对了！</div>
+            </div>
+            <div class="answer_state" v-if="gameInfo.answerState === 2">
+              <img class="answer_image" src="../img/wrong.png" alt="答错了">
+              <div class="answer_tips">很遗憾，答错了。
+                正确答案是：{{ garbage.garbageType }}</div>
             </div>
           </div>
-          <div class="table_block">
-            <div class="garbage_control" @click="control(0)">
-              停止
+          <div class="table_row">
+            <span>统计数据</span>
+            <div style="display: flex;flex-direction: column;margin-left: 8px;">
+              <span>答题总数：{{ gameInfo.total }}</span>
+              <span>未答题数：{{ gameInfo.noAnswer }}</span>
+
+            </div>
+            <div style="display: flex;flex-direction: column;margin-left: 8px;">
+              <span>正确题数：{{ gameInfo.right }}</span>
+              <span>错误题数：{{ gameInfo.wrong }}</span>
             </div>
           </div>
-        </div>
-        <div class="table_row" style="height: 70px;">
-          <div class="answer_state" v-if="gameInfo.answerState === 1">
-            <img class="answer_image" src="../img/right.png" alt="答对了">
-            <div class="answer_tips">恭喜你，答对了！</div>
-          </div>
-          <div class="answer_state" v-if="gameInfo.answerState === 2">
-            <img class="answer_image" src="../img/wrong.png" alt="答错了">
-            <div class="answer_tips">很遗憾，答错了。正确答案是：{{ garbage.garbageType }}</div>
-          </div>
-        </div>
-        <div class="table_row">
-          <span>统计数据</span>
-          <div style="display: flex;flex-direction: column;margin-left: 8px;">
-            <span>答题总数：{{ gameInfo.total }}</span>
-            <span>未答题数：{{ gameInfo.noAnswer }}</span>
-          </div>
-          <div style="display: flex;flex-direction: column;margin-left: 8px;">
-            <span>正确题数：{{ gameInfo.right }}</span>
-            <span>错误题数：{{ gameInfo.wrong }}</span>
-          </div>
-        </div>
-        <div class="table_row">
-          <div class="return_button" @click="clearData()" style="background: red;margin-right: 16px">
-            <div class="return_button_text">
-              清空数据
+          <div class="table_row">
+            <div class="return_button" @click="clearData()" style="background: red;margin-right: 16px">
+              <div class="return_button_text">
+                清空数据
+              </div>
             </div>
-          </div>
-          <div class="return_button" @click="goBack()">
-            <div class="return_button_text">
-              返回
+            <div class="return_button" @click="goBack()">
+              <div class="return_button_text">
+                返回
+              </div>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -95,22 +103,22 @@ export default {
       },
       bins: [
         {
-          imgUrl: require('../img/garbage1.png'),
+          imgUrl: require('../img/chuyu-rubbish.jpg'),
           showHand: false,
           garbageType: '厨余垃圾'
         },
         {
-          imgUrl: require('../img/garbage2.png'),
+          imgUrl: require('../img/kehuishou-rubbish.jpg'),
           showHand: false,
           garbageType: '可回收垃圾'
         },
         {
-          imgUrl: require('../img/garbage3.png'),
+          imgUrl: require('../img/qita-rubbish.jpg'),
           showHand: false,
           garbageType: '其它垃圾'
         },
         {
-          imgUrl: require('../img/garbage4.png'),
+          imgUrl: require('../img/youhai-rubbish.jpg'),
           showHand: false,
           garbageType: '有害垃圾'
         }
@@ -255,19 +263,47 @@ export default {
   width: 100%;
   height: 100%;
 }
-
-.center {
-  display: flex;
+.sortTrash-container{
+  width: 100%;
+  height: 100%;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+}
+.login-top {
+  width: 300px;
+  height: 120px;
+  margin: 0 auto;
+  position: relative;
 }
 
-.table {
+.login-icon {
+  height: 100px;
+  width: 250px;
+}
+
+.login-icon-tip {
+  display: block;
+  width: 350px;
+  height: 40px;
+  position: absolute;
+  left: 270px;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  font: 30px 黑体;
+}
+.sortTrash-content{
+  flex: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+}
+.sortTrash-content-warp{
+  display: flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 600px;
+  width: 100%;
+  /*margin-top: 20px;*/
+  /*background: powderblue;*/
 }
 
 .table_row {
@@ -313,7 +349,7 @@ export default {
   height: 24px;
   font-size: 24px;
   text-align: center;
-  color: #008000;
+  color:black;
 }
 
 .garbage_control {

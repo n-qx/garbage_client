@@ -1,25 +1,27 @@
+<!--答题记录-->
 <template>
   <div class="body">
     <div class="center">
-      <el-form status-icon ref="form" label-width="100px" class="demo-ruleForm">
+      <el-form status-icon ref="form" label-width="110px" class="demo-ruleForm">
         <el-row>
           <el-col :span="8">
+<!--            只有管理员能看到-->
             <el-form-item label="用户姓名" v-if="roleId === '1'">
               <el-input
                 type="text"
                 v-model="queryParam.userName"
                 @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
-            <el-form-item label="是否正确" v-else>
-              <el-select v-model="queryParam.answerState" placeholder="请选择">
-                <el-option
-                  v-for="(item, i) in styleMap2"
-                  :key="i"
-                  :label="item.name"
-                  :value="i">
-                </el-option>
-              </el-select>
-            </el-form-item>
+<!--            <el-form-item label="是否正确" v-else>-->
+<!--              <el-select v-model="queryParam.answerState" placeholder="请选择">-->
+<!--                <el-option-->
+<!--                  v-for="(item, i) in styleMap2"-->
+<!--                  :key="i"-->
+<!--                  :label="item.name"-->
+<!--                  :value="i">-->
+<!--                </el-option>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
           </el-col>
           <el-col :span="8">
             <el-form-item label="垃圾名称">
@@ -58,22 +60,22 @@
           <el-table-column
             prop="examSn"
             label="问卷编号"
-            width="80">
+            width="160">
           </el-table-column>
           <el-table-column
             prop="userName"
             label="用户名称"
-            width="120">
+            width="115">
           </el-table-column>
           <el-table-column
             prop="garbageName"
             label="垃圾名称"
-            width="120">
+            width="125">
           </el-table-column>
           <el-table-column
             prop="answerId"
             label="用户答案"
-            width="120">
+            width="125">
             <template slot-scope="scope">
               <el-tag
                 v-if="scope.row.answerId !== null"
@@ -87,7 +89,7 @@
           <el-table-column
             prop="sortId"
             label="正确答案"
-            width="120">
+            width="125">
             <template slot-scope="scope">
               <el-tag
                 :type="styleMap[scope.row.sortId].style"
@@ -96,8 +98,8 @@
           </el-table-column>
           <el-table-column
             prop="answerState"
-            label=""
-            width="85">
+            label="是否答对"
+            width="90">
             <template slot-scope="scope">
               <el-tag
                 v-if="scope.row.answerState !== null"
@@ -106,7 +108,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div style="text-align: center;margin-top: 30px;">
+        <div style="text-align: center;margin-top: 20px;">
           <el-pagination
             background
             layout="prev, pager, next"
@@ -201,8 +203,6 @@ export default {
       let req = {
         pageNo: this.currentPage,
         pageSize: this.pageSize,
-        // sortField: '',
-        // sortOrder: '',
         queryParam: JSON.stringify(this.queryParam)
       }
       this.loading = true
@@ -212,7 +212,7 @@ export default {
           that.tableData = res.result.data
           that.total = res.result.totalCount
           for (let data of that.tableData) {
-            if (data.answerId === null) {
+            if (data.answerId === null) { // 0未答 1正确 2错误
               data.answerState = 0
             } else {
               if (data.answerId === data.sortId) {

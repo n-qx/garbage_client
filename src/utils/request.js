@@ -1,18 +1,18 @@
 import Vue from 'vue'
 
-function requestPost (url, method, data) {
+function requestPost (url, method, data) { // 发送post请求
   return new Promise((resolve, reject) => {
     Vue.http.post(url, data, {
       // baseURL: 'https://tomb.xuebaeasy.com/',
       method: method,
       headers: {
         'Content-Type': 'application/json;',
-        'Access-Token': localStorage.getItem('access-token')
+        'Access-Token': localStorage.getItem('access-token') // localStorage 用于长久保存整个网站的数据，保存的数据没有过期时间，直到手动去删除。
       },
       timeout: 10000
     }).then((res) => {
       // 这边可以验证请求的token是否有效
-      if (res.headers.map.token_status[0] === 'no') {
+      if (res.headers.map.token_status[0] === 'no') { // token无效，登录无效，删除key值，自动跳转到登录界面
         localStorage.removeItem('access-token')
         alert('登录已过期，请重新登录')
         window.location.href = '/'
@@ -26,10 +26,10 @@ function requestPost (url, method, data) {
 }
 
 // 'Content-Type': 'multipart/form-data;multipart/form-data;boundary=12341411'
-function postFile (url, data) {
+function postFile (url, data) { // post文件
   return new Promise((resolve, reject) => {
     Vue.http.post(url, data, {
-      // baseURL: 'https://tomb.xuebaeasy.com/',
+      // baseURL: 'http://39.102.95.93:9123/',
       method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data;multipart/form-data;boundary=12341411',
@@ -51,7 +51,7 @@ function postFile (url, data) {
   })
 }
 
-function requestGet (url, method, data, token) {
+function requestGet (url, method, data, token) { // get方法
   return new Promise((resolve, reject) => {
     Vue.http.get(url, data, {
       method: method,

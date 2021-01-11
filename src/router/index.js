@@ -16,21 +16,12 @@ import ExamLog from '../views/ExamLog'
 
 Vue.use(Router)
 
-// const VueRouterPush = Router.prototype.push
-// Router.prototype.push = function push (to) {
-//     return VueRouterPush.call(this, to).catch(err => err)
-// }
-//
-// const VueRouterReplace = Router.prototype.replace
-// Router.prototype.replace = function replace (to) {
-//     return VueRouterReplace.call(this, to).catch(err => err)
-// }
 export default new Router({
   mode: 'history',
   routes: [
     {
       path: '/',
-      redirect: '/login',
+      redirect: '/login', // 主路由地址
       component: PageView,
       children: [
         {
@@ -68,7 +59,7 @@ export default new Router({
           meta: { permission: ['menu'] },
           children: [
             {
-              path: '/menu/userInfo',
+              path: '/menu/userInfo', // 用户信息
               name: 'UserInfo',
               component: UserInfo,
               meta: {
@@ -77,7 +68,7 @@ export default new Router({
               }
             },
             {
-              path: '/menu/userManage',
+              path: '/menu/userManage', // 用户管理
               name: 'UserManage',
               component: UserManage,
               meta: {
@@ -86,7 +77,7 @@ export default new Router({
               }
             },
             {
-              path: '/menu/garbageManage',
+              path: '/menu/garbageManage', // 垃圾信息管理
               name: 'GarbageManage',
               component: GarbageManage,
               meta: {
@@ -95,7 +86,7 @@ export default new Router({
               }
             },
             {
-              path: '/menu/analysis',
+              path: '/menu/analysis', // 信息统计
               name: 'Analysis',
               redirect: '/menu/analysis/garbageAnalysis',
               component: Analysis,
@@ -105,7 +96,7 @@ export default new Router({
               },
               children: [
                 {
-                  path: '/menu/analysis/garbageAnalysis',
+                  path: '/menu/analysis/garbageAnalysis', // 题目统计
                   name: 'GarbageAnalysis',
                   component: GarbageAnalysis,
                   meta: {
@@ -114,7 +105,7 @@ export default new Router({
                   }
                 },
                 {
-                  path: '/menu/analysis/userAnalysis',
+                  path: '/menu/analysis/userAnalysis', // 用户统计
                   name: 'UserAnalysis',
                   component: UserAnalysis,
                   meta: {
@@ -123,7 +114,7 @@ export default new Router({
                   }
                 },
                 {
-                  path: '/menu/analysis/examLog',
+                  path: '/menu/analysis/examLog', // 答题记录
                   name: 'ExamLog',
                   component: ExamLog,
                   meta: {

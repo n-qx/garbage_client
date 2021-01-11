@@ -2,30 +2,30 @@
   <el-dialog
     title="新增垃圾信息"
     :visible.sync="visible"
-    width="50%">
+    width="30%">
     <el-form
       status-icon
       ref="form"
       :model="garbage"
       :rules="rules"
-      label-width="100px"
+      label-width="110px"
       class="demo-ruleForm">
       <el-row>
-        <el-col :span="24">
+        <el-col :span="20">
           <el-form-item label="垃圾种类" prop="garbageFlag">
             <el-input type="text" v-model="garbage.garbageFlag"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <el-col :span="20">
           <el-form-item label="垃圾名称" prop="garbageName">
             <el-input type="text" v-model="garbage.garbageName"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <el-col :span="20">
           <el-form-item label="垃圾类别" prop="sortId">
             <el-select v-model="garbage.sortId" placeholder="请选择">
               <el-option
@@ -69,7 +69,7 @@ export default {
           { required: true, message: '请输入垃圾名称', trigger: 'blur' }
         ],
         sortId: [
-          { required: true, message: '请输入垃圾类别', trigger: 'blur' }
+          { required: true, message: '请选择垃圾类别', trigger: 'blur' }
         ]
       }
     }

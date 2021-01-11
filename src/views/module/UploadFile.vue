@@ -2,7 +2,7 @@
   <el-dialog
     title="图片上传"
     :visible.sync="visible"
-    width="50%">
+    width="30%">
     <el-upload
       class="upload-demo"
       :http-request="handleUpload"
@@ -15,7 +15,7 @@
       list-type="picture"
       action="">
       <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传不超过10mb的jpg/png文件，最多上传一张</div>
+      <div slot="tip" class="el-upload__tip">只能上传不超过10MB的.jpg/.png文件，最多上传一张</div>
     </el-upload>
   </el-dialog>
 </template>

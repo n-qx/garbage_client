@@ -261,7 +261,7 @@ export default {
         return
       }
       let numStr = this.num.toString()
-      if (numStr === null || numStr.length === 0) {
+      if (numStr === null || numStr.length === 0 || this.num < 0) { // 当题目数量无输入或输入小于0时提示错误
         this.$message({
           type: 'error',
           showClose: true,
@@ -290,7 +290,6 @@ export default {
       })
     },
     onChange (scope) {
-      // console.log(scope.row)
     },
     clearData () {
       this.dataInfo = {
@@ -300,27 +299,6 @@ export default {
         noAnswer: null
       }
     },
-    // updateData () {
-    //   this.dataInfo = {
-    //     total: this.tableData.length,
-    //     right: 0,
-    //     wrong: 0,
-    //     noAnswer: 0
-    //   }
-    //   for (let i = 0; i < this.tableData.length; i++) {
-    //     let data = this.tableData[i]
-    //     if (!data.answerId) {
-    //       this.dataInfo.noAnswer++
-    //       data.answerState = 0
-    //     } else if (data.answerId === data.sortId) {
-    //       this.dataInfo.right++
-    //       data.answerState = 1
-    //     } else {
-    //       this.dataInfo.wrong++
-    //       data.answerState = 2
-    //     }
-    //   }
-    // },
     handleOK () {
       this.$nextTick().then(() => {
         this.fetchData()
@@ -351,7 +329,7 @@ export default {
           } else {
             const r = res.result
             that.tableData = r.data
-            that.dataInfo = {
+            that.dataInfo = { // 总答题数、正确数、错误数和未答数
               total: r.total,
               right: r.right,
               wrong: r.wrong,

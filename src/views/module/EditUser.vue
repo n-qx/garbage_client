@@ -1,38 +1,38 @@
 <template>
   <el-dialog
-    title="新增垃圾信息"
+    title="审核用户信息"
     :visible.sync="visible"
-    width="50%">
+    width="30%">
     <el-form
       status-icon
       ref="form"
       :model="user"
       :rules="rules"
-      label-width="100px"
+      label-width="110px"
       class="demo-ruleForm">
       <el-row>
-        <el-col :span="24">
+        <el-col :span="20">
           <el-form-item label="用户名" prop="userName">
             <el-input type="text" v-model="user.userName" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <el-col :span="20">
           <el-form-item label="手机号" prop="phone">
             <el-input type="text" v-model="user.phone" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <el-col :span="20">
           <el-form-item label="身份证号" prop="idNumber">
             <el-input type="text" v-model="user.phone" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <el-col :span="20">
           <el-form-item label="审核状态" prop="userType">
             <el-select v-model="user.userType" placeholder="请选择">
               <el-option

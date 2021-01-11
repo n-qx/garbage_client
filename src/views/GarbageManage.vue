@@ -1,3 +1,4 @@
+<!--题目管理界面-->
 <template>
   <div class="body">
     <div class="center">
@@ -33,19 +34,13 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="10">
             <el-form-item>
               <el-button type="primary" @click="fetchData">查询</el-button>
+              <el-button type="primary" @click="addGarbage">新增</el-button>
               <el-button @click="queryParam={}">重置</el-button>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-form-item>
-            <el-col :span="8">
-              <el-button type="primary" @click="addGarbage">新增</el-button>
-            </el-col>
-          </el-form-item>
         </el-row>
       </el-form>
       <div>
@@ -59,17 +54,17 @@
           <el-table-column
             prop="garbageId"
             label="序号"
-            width="55">
+            width="60">
           </el-table-column>
           <el-table-column
             prop="garbageName"
             label="垃圾名称"
-            width="150">
+            width="155">
           </el-table-column>
           <el-table-column
             prop="sortId"
             label="垃圾类别"
-            width="120">
+            width="125">
             <template slot-scope="scope">
               <el-tag
                 :type="styleMap[scope.row.sortId].style"
@@ -79,15 +74,15 @@
           <el-table-column
             prop="garbageFlag"
             label="垃圾种类"
-            width="120">
+            width="125">
           </el-table-column>
           <el-table-column
             prop="gmtCreate"
             label="创建时间"
-            width="120">
+            width="125">
           </el-table-column>
           <el-table-column label="操作"
-            width="240">
+            width="240" center>
             <template slot-scope="scope">
               <el-button
                 size="mini"

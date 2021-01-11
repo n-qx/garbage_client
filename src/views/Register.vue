@@ -1,12 +1,17 @@
 <template>
   <div class="body">
-    <div class="center">
-      <div class="header"></div>
-      <div class="background">
-        <div class="image">
-          <form method="get" action="" name="form">
+    <div class="register-container">
+
+      <div class="login-top">
+        <img src="../img/login-icon.jpg" class="login-icon" alt="欢迎注册">
+        <div class="login-icon-tip">欢迎注册垃圾分类小系统</div>
+      </div>
+      <div class="register-content">
+           <div class="register-content-wrap">
+              <div class="register-wrap">
+                <form method="get" action="" name="form">
             <!--class类选择器-->
-            <div class="registerTable">
+                  <div class="registerTable">
               <div style="width: 100%;">
                 <div style="width: 100%; display: flex;flex-direction: row">
                   <h2>
@@ -15,7 +20,7 @@
                   <h2
                     style="margin-left: auto; cursor: pointer"
                     @click="$router.push({name: 'SortTrash'})">
-                    垃圾分类练习
+                    垃圾分类小游戏
                   </h2>
                 </div>
                 <hr style="width: 100%;height: 1px;color: silver">
@@ -89,14 +94,13 @@
                        @click="handleSubmit" value="立即注册">
               </div>
             </div>
-          </form>
-        </div>
+                </form>
+              </div>
+           </div>
       </div>
-      <br>
-      <!--行内样式-->
-      <span style="font-family: 微软雅黑 Light,serif; font-size: 14px; font-weight: bold; color: gray;">
-            版权所有 © 浙大宁波理工学院数据分院
-        </span>
+      <div class="login-footer">
+        <span>版权所有 © 浙大宁波理工学院数据分院</span>
+      </div>
     </div>
   </div>
 </template>
@@ -131,8 +135,8 @@ export default {
       const userName = this.form.userName
       const idNumber = this.form.idNumber
       let flag = phone && password && checkPwd && userName && idNumber &&
-        phone.length > 0 && password.length > 0 && checkPwd.length > 0 && userName.length > 0 &&
-        idNumber.length > 0
+          phone.length > 0 && password.length > 0 && checkPwd.length > 0 && userName.length > 0 &&
+          idNumber.length > 0
       if (!flag) {
         this.$message({
           type: 'error',
@@ -221,136 +225,202 @@ export default {
 </script>
 
 <style>
-/*html选择器*/
-h2 {
-  color: gray;
-  font: bold 20px 微软雅黑 Light;
-}
+  .register-container{
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+  }
+  .login-top {
+    width: 300px;
+    height: 120px;
+    margin: 0 auto;
+    position: relative;
+  }
 
-.center {
-  width: 100%;
-  height: 100%;
+  .login-icon {
+    height: 100px;
+    width: 250px;
+  }
+
+  .login-icon-tip {
+    display: block;
+    width: 350px;
+    height: 40px;
+    position: absolute;
+    left: 270px;
+    top: 50px;
+    right: 0;
+    bottom: 0;
+    font: 30px 黑体;
+  }
+.register-content{
+  flex:1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
+  .register-content-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 450px;
+    width: 100%;
+    margin-top: 20px;
+    background: powderblue;
+  }
+  .register-wrap {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 560px;
+    height: 430px;
+    background: #ffffff
+  }
+  .login-footer {
+    text-align: center;
+    margin-top: 20px;
+    font: 20px "微软雅黑 Light";
+    color: silver;
+  }
 
-.header {
-  width: 100%;
-  height: 40px;
-}
+  /*html选择器*/
+  h2 {
+    color: gray;
+    font: bold 20px 微软雅黑 Light;
+  }
 
-.background {
-  width: 100%;
-  background: #020202;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
+  .center {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-.image {
-  width: 1000px;
-  height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  background: url("../img/background.jpg");
-  background-size: cover;
-}
+  .header {
+    width: 100%;
+    height: 40px;
+  }
 
-a {
-  font-size: 13px;
-  cursor: pointer;
-}
+  .body {
+    width: 100%;
+    height: 100%;
+    /*background: url("../img/bk.jpg");*/
+    /*background-size: cover;
+    justify-content: center;*/
+    flex-direction: column;
+  }
 
-/*html选择器*/
-a:link {
-  color: #337ab7;
-  text-decoration: none;
-  font-family: "微软雅黑 Light", serif;
-  font-size: 13px;
-  font-weight: bold;
-}
+  .background1 {
+    width: 100%;
+    background: #c0c0c0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 
-/*html选择器*/
-a:visited {
-  color: #337ab7;
-  text-decoration: none;
-  font-family: "微软雅黑 Light", serif;
-  font-size: 13px;
-  font-weight: bold;
-}
+  }
 
-/*html选择器*/
-a:hover {
-  color: #337ab7;
-  text-decoration: underline;
-  font-family: "微软雅黑 Light", serif;
-  font-size: 13px;
-  font-weight: bold;
-}
+  .image1 {
+    width: 1000px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-size: cover;
+    background: url("../img/b.jpg");
+  }
 
-/*html选择器*/
-a:active {
-  color: #337ab7;
-  text-decoration: underline;
-  font-family: "微软雅黑 Light", serif;
-  font-size: 13px;
-  font-weight: bold;
-}
+  a {
+    font-size: 13px;
+    cursor: pointer;
+  }
 
-.tableRow {
-  height: 55px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+  /*html选择器*/
+  a:link {
+    color: #337ab7;
+    text-decoration: none;
+    font-family: "微软雅黑 Light", serif;
+    font-size: 13px;
+    font-weight: bold;
+  }
 
-.label {
-  margin-left: 12px;
-  width: 80px;
-}
+  /*html选择器*/
+  a:visited {
+    color: #337ab7;
+    text-decoration: none;
+    font-family: "微软雅黑 Light", serif;
+    font-size: 13px;
+    font-weight: bold;
+  }
 
-.input {
-  margin-left: 8px;
-}
+  /*html选择器*/
+  a:hover {
+    color: #337ab7;
+    text-decoration: underline;
+    font-family: "微软雅黑 Light", serif;
+    font-size: 13px;
+    font-weight: bold;
+  }
 
-.message {
-  margin-left: 12px;
-  width: 120px;
-}
+  /*html选择器*/
+  a:active {
+    color: #337ab7;
+    text-decoration: underline;
+    font-family: "微软雅黑 Light", serif;
+    font-size: 13px;
+    font-weight: bold;
+  }
 
-/*class类选择器*/
-.registerTable {
-  width: 550px;
-}
+  .tableRow {
+    height: 55px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 
-/*class类选择器*/
-.registerMessage {
-  color: gray;
-  font: bold 14px 微软雅黑 Light;
-}
+  .label {
+    margin-left: 12px;
+    width: 80px;
+  }
 
-/*class类选择器*/
-.registerText {
-  width: 300px;
-  font: bold 14px 微软雅黑 Light;
-  padding: 8px 10px;
-  border: silver 1px solid;
-  cursor: hand;
-}
+  .input {
+    margin-left: 8px;
+  }
 
-/*class类选择器*/
-.registerButton {
-  color: white;
-  width: 320px;
-  height: 40px;
-  font: bold 16px 微软雅黑 Light;
-  border: #337ab7 1px solid;
-  margin-left: 100px;
-  cursor: hand;
-  background: #337ab7;
-}
+  .message {
+    margin-left: 12px;
+    width: 120px;
+  }
+
+  /*class类选择器*/
+  .registerTable {
+    width: 550px;
+  }
+
+  /*class类选择器*/
+  .registerMessage {
+    color: gray;
+    font: bold 14px 微软雅黑 Light;
+  }
+
+  /*class类选择器*/
+  .registerText {
+    width: 300px;
+    font: bold 14px 微软雅黑 Light;
+    padding: 8px 10px;
+    border: silver 1px solid;
+    cursor: hand;
+  }
+
+  /*class类选择器*/
+  .registerButton {
+    color: white;
+    width: 320px;
+    height: 40px;
+    font: bold 16px 微软雅黑 Light;
+    border: lightskyblue 1px solid;
+    margin-left: 100px;
+    cursor: hand;
+    background: lightskyblue;
+  }
 </style>

@@ -1,3 +1,4 @@
+<!--用户统计-->
 <template>
   <div class="body">
     <div class="center">
@@ -5,6 +6,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="用户名">
+<!--              v-model 表单数据的双向绑定-->
               <el-input
                 type="text"
                 v-model="queryParam.userName"
