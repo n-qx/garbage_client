@@ -20,7 +20,7 @@
             <div class="table_block" v-for="(bin, i) in bins" v-bind:key="i">
               <div class="hand_garbage">
                 <div class="hand">
-                  <img v-if="bin.showHand" src="../img/02.jpg" class="img" alt="">
+                  <img v-if="bin.showHand" src="../img/judge.jpg" class="img" alt="">
                 </div>
                 <div class="garbage_type" @mouseenter="onMouseOver(i)" @mouseleave="onMouseOut(i)"
                      @click="choseGarbage(i)">
@@ -40,11 +40,11 @@
           </div>
           <div class="table_row" style="height: 70px;">
             <div class="answer_state" v-if="gameInfo.answerState === 1">
-              <img class="answer_image" src="../img/right.png" alt="答对了">
+              <img class="answer_image" src="../img/yes.jpg" alt="答对了">
               <div class="answer_tips">恭喜你，答对了！</div>
             </div>
             <div class="answer_state" v-if="gameInfo.answerState === 2">
-              <img class="answer_image" src="../img/wrong.png" alt="答错了">
+              <img class="answer_image" src="../img/no.jpg" alt="答错了">
               <div class="answer_tips">很遗憾，答错了。
                 正确答案是：{{ garbage.garbageType }}</div>
             </div>
@@ -103,22 +103,22 @@ export default {
       },
       bins: [
         {
-          imgUrl: require('../img/chuyu-rubbish.jpg'),
+          imgUrl: require('../img/rubbish_1.jpg'),
           showHand: false,
           garbageType: '厨余垃圾'
         },
         {
-          imgUrl: require('../img/kehuishou-rubbish.jpg'),
+          imgUrl: require('../img/rubbish_2.jpg'),
           showHand: false,
           garbageType: '可回收垃圾'
         },
         {
-          imgUrl: require('../img/qita-rubbish.jpg'),
+          imgUrl: require('../img/rubbish_3.jpg'),
           showHand: false,
           garbageType: '其它垃圾'
         },
         {
-          imgUrl: require('../img/youhai-rubbish.jpg'),
+          imgUrl: require('../img/rubbish_4.jpg'),
           showHand: false,
           garbageType: '有害垃圾'
         }

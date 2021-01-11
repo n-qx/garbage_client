@@ -4,26 +4,7 @@
     <div class="center">
       <el-form status-icon ref="form" label-width="110px" class="demo-ruleForm">
         <el-row>
-          <el-col :span="8">
-<!--            只有管理员能看到-->
-            <el-form-item label="用户姓名" v-if="roleId === '1'">
-              <el-input
-                type="text"
-                v-model="queryParam.userName"
-                @keyup.enter.native="fetchData"></el-input>
-            </el-form-item>
-<!--            <el-form-item label="是否正确" v-else>-->
-<!--              <el-select v-model="queryParam.answerState" placeholder="请选择">-->
-<!--                <el-option-->
-<!--                  v-for="(item, i) in styleMap2"-->
-<!--                  :key="i"-->
-<!--                  :label="item.name"-->
-<!--                  :value="i">-->
-<!--                </el-option>-->
-<!--              </el-select>-->
-<!--            </el-form-item>-->
-          </el-col>
-          <el-col :span="8">
+          <el-col :span="7">
             <el-form-item label="垃圾名称">
               <el-input
                 type="text"
@@ -31,7 +12,7 @@
                 @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="7">
             <el-form-item label="问卷编号">
               <el-input
                 type="text"
@@ -39,15 +20,21 @@
                 @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="8" style="margin-left: -60px">
+            <el-form-item>
+              <el-button type="primary" @click="fetchData">查询</el-button>
+              <el-button @click="queryParam={}">重置</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
-        <el-row>
+        <!--<el-row>
             <el-col :span="8">
               <el-form-item>
                 <el-button type="primary" @click="fetchData">查询</el-button>
                 <el-button @click="queryParam={}">重置</el-button>
               </el-form-item>
             </el-col>
-        </el-row>
+        </el-row>-->
       </el-form>
       <div>
         <el-table

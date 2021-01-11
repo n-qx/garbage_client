@@ -12,14 +12,14 @@
           </el-col>
           <el-col :span="12">
             <el-form-item>
-              <el-button type="primary" @click="handleSubmit">提交</el-button>
+              <el-button type="primary" @click="handleSubmit" style="margin-left: -60px">提交</el-button>
               <el-button
                 :disabled="loading"
                 @click="resetData">重置题目</el-button>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <!--<el-row>
           <el-col :span="24">
             <el-form-item label="题目序列号">
               <el-input
@@ -29,7 +29,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row>-->
         <el-row>
           <el-col :span="6">
             <el-form-item label="总题数">
@@ -42,7 +42,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="答对题数">
+            <el-form-item label="正确题数">
               <el-input
                 style="width: 120px;"
                 type="text"
@@ -52,7 +52,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="答错题数">
+            <el-form-item label="错误题数">
               <el-input
                 style="width: 120px;"
                 type="text"

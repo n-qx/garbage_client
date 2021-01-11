@@ -23,17 +23,15 @@
                 @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <!--<el-col :span="8">
             <el-form-item label="电话">
               <el-input
                 type="text"
                 v-model="queryParam.phone"
                 @keyup.enter.native="fetchData"></el-input>
             </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
+          </el-col>-->
+          <el-col :span="8" style="margin-left: -40px">
             <el-form-item>
               <el-button
                 type="primary"
@@ -42,6 +40,16 @@
             </el-form-item>
           </el-col>
         </el-row>
+       <!-- <el-row>
+          <el-col :span="8">
+            <el-form-item>
+              <el-button
+                type="primary"
+                @click="fetchData">查询</el-button>
+              <el-button @click="queryParam={}">重置</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>-->
       </el-form>
       <div>
         <el-table
